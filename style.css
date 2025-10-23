@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgba(5, 31, 30);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.navbar {
+    width: 100%;
+    background-color: rgba(5,31,30,0.95);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px; /* smaller padding */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    flex-wrap: wrap; /* allows wrapping if screen is small */
+}
+
+.navbar .logo {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    color: rgba(179,126,76);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap; /* wrap links if needed */
+    gap: 20px; /* reduced gap to fit better */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .nav-links li a {
+    color: rgba(179,126,76);
+    text-decoration: none;
+    font-size: 16px; /* smaller font so links fit */
+    font-weight: 600;
+    transition: color 0.3s ease;
+    white-space: nowrap; /* prevents links from breaking in the middle */
+}
+
+.navbar .nav-links li a:hover {
+    color: rgba(220,160,90);
+}
+
+.banner {
+    margin-top: 120px;
+    background-color: rgba(5, 31, 30, 0.9);
+    padding: 100px 40px;
+    text-align: center;
+    border-radius: 20px;
+    opacity: 0;
+    transform: translateY(50px);
+    animation: fadeInUp 2s forwards;
+    box-shadow: 0 0 50px rgba(0,0,0,0.7);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.banner:hover {
+    transform: scale(1.03) translateY(-5px);
+    box-shadow: 0 0 70px rgba(0,0,0,0.9);
+}
+
+.banner p {
+    font-family: 'Cinzel', serif;
+    font-size: 50px;
+    font-weight: 700;
+    color: rgba(179,126,76);
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.cta-btn {
+    display: inline-block;
+    padding: 25px 50px;
+    font-size: 24px;
+    font-weight: 700;
+    color: rgba(5,31,30);
+    background: rgba(179, 126, 76);
+    border-radius: 15px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-btn:hover {
+    background: rgba(220,160,90);
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(220,160,90,0.7);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+    .navbar .nav-links {
+        flex-direction: column; /* stack links vertically */
+        width: 100%;
+    }
+    .options {
+        gap: 20px;
+    }
+}
