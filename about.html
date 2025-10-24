@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthBridge - About Us</title>
+    <link rel="icon" type="image/x-icon" href="logo.jpg" alt="Health Bridge Logo">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Custom styles for about.html */
+        .mission-vision {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .mission-card, .vision-card {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--background-color);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-top: 3px solid var(--light-accent);
+        }
+
+        .mission-card h3, .vision-card h3 {
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--light-accent);
+            padding-bottom: 10px;
+        }
+
+        /* Update idea card to include space for image */
+        .idea-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Health Bridge</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home Page</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="content-section" style="text-align: center; max-width: 900px;">
+            <h2>Our Mission & Vision</h2>
+            <p class="description">We are dedicated to building a foundation for **lasting well-being**.</p>
+        </div>
+
+        <!-- Hero image for About Us -->
+        <div class="visual-placeholder" style="max-width: 900px; margin: 20px auto; min-height: 350px;">
+            <p>TEAM/COMMUNITY IMAGE PLACEHOLDER</p>
+        </div>
+
+        <div class="content-section" style="max-width: 900px; width: 90%;">
+            <!-- Structure Mission/Vision into cards for better visual flow -->
+            <div class="mission-vision">
+                <div class="mission-card">
+                    <h3>Our Mission</h3>
+                    <p>To provide accessible, integrated, and proactive health tools focusing on both mental wellness and physical fitness, enabling individuals to achieve a state of holistic health.</p>
+                </div>
+                <div class="vision-card">
+                    <h3>Our Vision</h3>
+                    <p>To become the leading platform for preventative health resources, eliminating barriers to essential support and information, and fostering a global community dedicated to lifelong wellness.</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 40px;">Integrated Approach to Health</h2>
+            <p style="text-align: center;">Our comprehensive strategy includes:</p>
+
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-around; gap: 20px; margin-top: 30px;">
+                <div style="flex: 1; min-width: 250px; padding: 20px; background-color: var(--background-color); border-radius: 8px; border-left: 5px solid var(--accent-color);">
+                    <h3 style="color: var(--primary-dark); font-size: 1.2rem; margin-top: 0;">Online Therapy Integration</h3>
+                    <p>Seamless connections to professional, licensed therapists.</p>
+                </div>
+                <div style="flex: 1; min-width: 250px; padding: 20px; background-color: var(--background-color); border-radius: 8px; border-left: 5px solid var(--accent-color);">
+                    <h3 style="color: var(--primary-dark); font-size: 1.2rem; margin-top: 0;">Local Resource Mapping</h3>
+                    <p>Connecting users with nearby health facilities and support locations.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" style="max-width: 900px; width: 90%;">
+            <h2>Mental Wellness Programs</h2>
+            <p class="description" style="margin-bottom: 30px; text-align: center;">Addressing modern challenges like digital addiction and stress through preventative resources and tools.</p>
+
+            <div class="grid-container">
+                <div class="idea-card">
+                    <div class="visual-placeholder card-image">
+                        <p>IMAGE PLACEHOLDER: Stress Relief Kit</p>
+                    </div>
+                    <h3>Suicide & Stress Relief Kits</h3>
+                    <p>Provision of physical resources (stress balls, pop-its, etc.) to help individuals actively relieve stress and manage immediate anxiety.</p>
+                </div>
+
+                <div class="idea-card">
+                    <div class="visual-placeholder card-image">
+                        <p>IMAGE PLACEHOLDER: Quiz / Assessment</p>
+                    </div>
+                    <h3>Mental Health Status Quiz</h3>
+                    <p>A short, multiple-choice quiz designed to provide users with an initial mental health status assessment, indicating a potential leaning toward depression or addiction.</p>
+                </div>
+
+                <div class="idea-card">
+                    <div class="visual-placeholder card-image">
+                        <p>IMAGE PLACEHOLDER: Phone / Screen Time</p>
+                    </div>
+                    <h3>Digital Addiction Regulation</h3>
+                    <p>Tools and features to help users implement and manage Screen Time Limit Regulation, aiding in the prevention and management of digital addiction.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

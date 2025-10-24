@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthBridge - Support & Kits</title>
+    <link rel="icon" type="image/x-icon" href="logo.jpg" alt="Health Bridge Logo">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- User's definitive CSS style block -->
+    <style>
+        /* Custom styles for support.html that are not in style.css */
+        
+        /* Modal specific button style */
+        .btn-submit {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-color-light);
+            box-shadow: 0 4px 10px rgba(52, 61, 84, 0.3);
+            display: inline-block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #2b3245; 
+            transform: translateY(-2px);
+        }
+
+        .order-confirmed h3 {
+             color: var(--primary-dark); 
+             border: none; 
+             font-size: 1.5rem; 
+             margin-bottom: 20px;
+        }
+
+        .order-confirmed p {
+            font-size: 1.1rem; 
+            margin-bottom: 5px;
+        }
+
+        .order-confirmed strong {
+            color: var(--accent-color);
+        }
+
+        .order-confirmed button {
+            margin-top: 20px;
+            max-width: 200px; /* Make button smaller in confirmation */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Health Bridge</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home Page</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <main style="max-width: 1000px; margin: 20px auto;">
+        
+        <div class="content-section" style="text-align: center;">
+            <h2>Crisis Support & Stress Relief Kits</h2>
+            <p class="description">Immediate resources for high-stress situations and information on obtaining our physical relief kits.</p>
+        </div>
+
+        <div class="content-section">
+            <h2 style="border: none; text-align: center;">Stress Relief Kit: Order Now</h2>
+
+            <!-- Visual Section for the Kit -->
+            <div class="kit-section">
+                <div class="visual-placeholder" style="min-height: 250px; flex: 1; min-width: 250px;">
+                    <p>IMAGE PLACEHOLDER: Physical Stress Kit Contents</p>
+                </div>
+                <div class="kit-info" style="flex: 1;">
+                    <h3 style="color: var(--primary-dark); font-family: 'Raleway', sans-serif; font-size: 1.5rem; border-bottom: 1px solid var(--light-accent); padding-bottom: 10px;">The Wellness Kit</h3>
+                    <p>Our relief kit is designed to provide immediate, tangible comfort during moments of high anxiety or emotional crisis. It includes items like stress balls, guided breathing cards, and sensory toys to help ground you.</p>
+                    <button id="orderBtn" class="cta-btn" style="margin-top: 20px; width: 100%; max-width: 300px;">Request Your Kit</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section crisis-info">
+            <h2 style="border: none; text-align: center;">Immediate Crisis Hotlines</h2>
+            <p class="description" style="text-align: center;">If you are experiencing a mental health crisis, please reach out immediately.</p>
+            <ul>
+                <li>
+                    <span style="font-size: 1.2rem; margin-right: 10px; color: red;">📞</span>
+                    <strong>National Suicide Prevention Lifeline:</strong> 
+                    <a href="tel:988">988</a> (US & Canada)
+                </li>
+                <li>
+                    <span style="font-size: 1.2rem; margin-right: 10px; color: red;">📱</span>
+                    <strong>Crisis Text Line:</strong> 
+                    Text HOME to <a href="sms:741741">741741</a> (US & Canada)
+                </li>
+                <li>
+                    <span style="font-size: 1.2rem; margin-right: 10px; color: red;">🌍</span>
+                    <strong>International Crisis Hotlines:</strong> 
+                    Find resources at <a href="https://www.befrienders.org/" target="_blank">Befrienders Worldwide</a>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- The Modal -->
+    <div id="addressModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" style="float: right; font-size: 28px; font-weight: bold; cursor: pointer; color: var(--primary-dark);">&times;</span>
+            <h3 style="text-align: center;">Shipping Information</h3>
+            <form id="addressForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Shipping Address</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City/State/Zip</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <button type="submit" class="btn-submit">Confirm Order</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const orderBtn = document.getElementById('orderBtn');
+        const addressModal = document.getElementById('addressModal');
+        const closeModal = document.getElementById('closeModal');
+        const addressForm = document.getElementById('addressForm');
+        
+        function showModal() {
+            addressModal.style.display = 'block';
+        }
+
+        function hideModal() {
+            addressModal.style.display = 'none';
+        }
+
+        // Event listener to show the modal
+        orderBtn.addEventListener('click', showModal);
+
+        // Event listener to close the modal using the 'x'
+        closeModal.addEventListener('click', hideModal);
+
+        // Event listener to close the modal when clicking outside of it
+        window.addEventListener('click', (e) => {
+            if (e.target === addressModal) {
+                hideModal();
+            }
+        });
+
+        // Event listener for form submission
+        addressForm.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            
+            const name = document.getElementById('fullName').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            
+            console.log('--- Order Confirmed ---');
+
+            // Replace the form with a confirmation message
+            const confirmationMessage = `
+                <div class="order-confirmed" style="text-align: center; padding: 20px;">
+                    <h3 style="color: var(--primary-dark); border: none; font-size: 1.5rem; margin-bottom: 20px;">Order Placed!</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 5px;">Thank you, <strong>${name}</strong>!</p>
+                    <p>Your kit is being shipped to:</p>
+                    <p style="font-style: italic; margin-bottom: 20px;">${address}, ${city}</p>
+                    <button type="button" class="btn-submit" onclick="hideModal()">Close</button>
+                </div>
+            `;
+            
+            addressModal.querySelector('.modal-content').innerHTML = confirmationMessage;
+        });
+
+    </script>
+</body>
+</html>

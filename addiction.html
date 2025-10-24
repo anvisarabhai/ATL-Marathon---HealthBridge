@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthBridge - Digital Wellness Tracker</title>
+    <link rel="icon" type="image/x-icon" href="logo.jpg" alt="Health Bridge Logo">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase Imports - MUST be kept in the head or before use -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase access
+        window.firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        window.initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        window.appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        window.initializeApp = initializeApp;
+        window.getAuth = getAuth;
+        window.signInAnonymously = signInAnonymously;
+        window.signInWithCustomToken = signInWithCustomToken;
+        window.getFirestore = getFirestore;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.onSnapshot = onSnapshot;
+
+        // Utility to generate unique ID if not authenticated
+        if (!window.crypto.randomUUID) {
+            window.crypto.randomUUID = () => {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            };
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Health Bridge</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home Page</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <main style="display: flex; flex-direction: column; align-items: center;">
+        <div class="content-section" style="text-align: center; max-width: 900px; margin: 20px auto;">
+            <h2>Digital Wellness Tracker</h2>
+            <p class="description">Set a daily screen-time limit and track your progress in real-time. Stay mindful to beat digital addiction.</p>
+        </div>
+
+        <!-- Visual Placeholder for context -->
+        <div class="visual-placeholder" style="max-width: 600px; min-height: 200px;">
+            <p>IMAGE PLACEHOLDER: Focus / Concentration</p>
+        </div>
+
+        <div class="tracker-container">
+            <h3 style="color: var(--primary-dark); margin-bottom: 5px;">TIME REMAINING</h3>
+            <div id="timerDisplay" class="timer-display">00:00:00</div>
+            
+            <p id="statusMessage" style="font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; color: var(--text-color-dark);">
+                Loading...
+            </p>
+
+            <div class="button-group">
+                <button id="startStopBtn" class="btn-control">Start</button>
+                <button id="resetBtn" class="btn-control">Reset</button>
+                <button id="setLimitBtn" class="btn-control">Set Limit</button>
+            </div>
+
+            <div id="limitMessage" style="margin-top: 15px; font-size: 0.9rem; color: #777;">
+                Current Limit: 00:00:00
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        // --- State Variables ---
+        let db;
+        let auth;
+        let userId = null;
+
+        let intervalId = null;
+        let timeRemainingSeconds = 0;
+        let limitSeconds = 0;
+        let isRunning = false;
+        let startTime = 0;
+        let pausedAt = 0;
+
+        // --- DOM Elements ---
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startStopBtn = document.getElementById('startStopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const setLimitBtn = document.getElementById('setLimitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const limitMessage = document.getElementById('limitMessage');
+
+        // --- Utility Functions ---
+
+        function formatTime(totalSeconds) {
+            const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+            const s = String(totalSeconds % 60).padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        function saveState() {
+            if (!db || !userId) {
+                console.error("Firestore not initialized or user not logged in.");
+                return;
+            }
+
+            const now = Date.now();
+            const state = {
+                limitSeconds: limitSeconds,
+                isRunning: isRunning,
+                // If running, save the current state based on when it started
+                startTime: isRunning ? startTime : 0, 
+                // If paused, save the exact time remaining
+                pausedAt: isRunning ? 0 : timeRemainingSeconds, 
+                lastUpdated: now
+            };
+
+            const userDocRef = doc(db, "artifacts", window.appId, "users", userId, "tracker", "digital-wellness");
+            setDoc(userDocRef, state).catch(error => {
+                console.error("Error saving state to Firestore:", error);
+            });
+        }
+
+        function updateTimer() {
+            if (isRunning) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                timeRemainingSeconds = Math.max(0, limitSeconds - elapsed);
+            }
+            
+            timerDisplay.textContent = formatTime(timeRemainingSeconds);
+            limitMessage.textContent = `Current Limit: ${formatTime(limitSeconds)}`;
+
+            if (timeRemainingSeconds <= 0 && isRunning) {
+                stopTimer(true); // Stop and trigger alert
+            } else if (timeRemainingSeconds <= 60 && isRunning) {
+                timerDisplay.classList.add('alert-pulse');
+                statusMessage.textContent = "WARNING: Limit almost reached!";
+                statusMessage.style.color = "#FF4444";
+            } else {
+                timerDisplay.classList.remove('alert-pulse');
+                statusMessage.textContent = isRunning ? "Tracker is RUNNING" : "Limit: " + formatTime(limitSeconds) + ". Press Start to begin.";
+                statusMessage.style.color = isRunning ? "var(--accent-color)" : "var(--primary-dark)";
+            }
+        }
+        
+        function stopTimer(alert = false) {
+            clearInterval(intervalId);
+            intervalId = null;
+            isRunning = false;
+            timeRemainingSeconds = timeRemainingSeconds; // Keeps the final value
+            startStopBtn.textContent = 'Start';
+            timerDisplay.classList.remove('alert-pulse');
+            
+            if (alert) {
+                 statusMessage.textContent = "TIME'S UP! Digital limit reached.";
+                 statusMessage.style.color = "red";
+            } else {
+                statusMessage.textContent = "PAUSED. Time left: " + formatTime(timeRemainingSeconds);
+                statusMessage.style.color = "var(--primary-dark)";
+            }
+
+            saveState();
+        }
+
+        function startStopTimer() {
+            if (!userId) {
+                console.warn("User ID not available yet.");
+                return;
+            }
+
+            if (limitSeconds === 0) {
+                 statusMessage.textContent = "Please set a time limit first.";
+                 statusMessage.style.color = "red";
+                 return;
+            }
+
+            if (isRunning) {
+                // Pause logic
+                stopTimer();
+            } else {
+                // Start logic
+                isRunning = true;
+                startTime = Date.now() - (limitSeconds - timeRemainingSeconds) * 1000;
+                startStopBtn.textContent = 'Pause';
+                
+                // Start interval if it's not running
+                if (intervalId === null) {
+                    intervalId = setInterval(updateTimer, 1000);
+                }
+                statusMessage.textContent = "Tracker is RUNNING";
+                statusMessage.style.color = "var(--accent-color)";
+                saveState();
+            }
+            updateTimer(); // Immediate update
+        }
+
+        function resetTimer() {
+            if (isRunning) {
+                stopTimer();
+            }
+            timeRemainingSeconds = limitSeconds;
+            updateTimer();
+            saveState();
+             statusMessage.textContent = "Timer RESET. Ready to start.";
+             statusMessage.style.color = "var(--primary-dark)";
+        }
+
+        function setDailyLimit() {
+            let input = prompt("Set your daily screen-time limit (in hours:minutes, e.g., 01:30 for 1 hour 30 minutes):");
+            if (input === null || input.trim() === "") return;
+
+            const parts = input.split(':').map(p => parseInt(p.trim()) || 0);
+            let newLimit = 0;
+
+            if (parts.length === 2) {
+                // hours:minutes format
+                newLimit = (parts[0] * 3600) + (parts[1] * 60);
+            } else {
+                statusMessage.textContent = "Invalid format. Please use HH:MM.";
+                statusMessage.style.color = "red";
+                return;
+            }
+            
+            if (newLimit > 0) {
+                if (isRunning) {
+                    stopTimer(); // Pause first if running
+                }
+                limitSeconds = newLimit;
+                timeRemainingSeconds = newLimit;
+                updateTimer();
+                saveState();
+                statusMessage.textContent = `New Limit set: ${formatTime(limitSeconds)}. Press Start to begin.`;
+                statusMessage.style.color = "var(--accent-color)";
+            } else {
+                statusMessage.textContent = "Limit must be greater than zero.";
+                statusMessage.style.color = "red";
+            }
+        }
+
+        // --- Firebase Initialization ---
+
+        async function initializeFirebase() {
+            try {
+                if (!window.firebaseConfig) {
+                    throw new Error("Firebase config not available.");
+                }
+
+                const app = window.initializeApp(window.firebaseConfig);
+                db = window.getFirestore(app);
+                auth = window.getAuth(app);
+                
+                // Authentication: Use custom token if available, otherwise sign in anonymously
+                if (window.initialAuthToken) {
+                    await window.signInWithCustomToken(auth, window.initialAuthToken);
+                } else {
+                    await window.signInAnonymously(auth);
+                }
+                
+                userId = auth.currentUser?.uid || window.crypto.randomUUID();
+                
+                // Load or initialize state
+                loadState();
+
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                statusMessage.textContent = "Error loading application data. Check console.";
+                statusMessage.style.color = "red";
+            }
+        }
+
+        function loadState() {
+            if (!db || !userId) return;
+
+            const userDocRef = doc(db, "artifacts", window.appId, "users", userId, "tracker", "digital-wellness");
+
+            // Real-time listener for state changes
+            onSnapshot(userDocRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    
+                    limitSeconds = data.limitSeconds || 0;
+                    
+                    // Determine current state
+                    const now = Date.now();
+                    
+                    if (data.isRunning) {
+                        // Calculate remaining time based on start time
+                        const elapsed = Math.floor((now - data.startTime) / 1000);
+                        timeRemainingSeconds = Math.max(0, limitSeconds - elapsed);
+                    } else {
+                        // Use saved paused time
+                        timeRemainingSeconds = data.pausedAt || limitSeconds;
+                    }
+                    
+                    // Logic to ensure local timer reflects Firestore state
+                    const wasRunning = data.isRunning;
+                    
+                    // If Firestore says it's running but we don't have an interval, start it.
+                    if (wasRunning && intervalId === null) {
+                        isRunning = false; // Temporarily false to trigger startStopTimer correctly
+                        startStopBtn.textContent = 'Start'; // Ensure button text is correct before starting
+                        startStopTimer(); 
+                    } 
+                    // If Firestore says it's paused and we have an interval, stop it.
+                    else if (!wasRunning && intervalId !== null) {
+                        // If it was running locally but paused in Firestore, stop it locally
+                        stopTimer();
+                    } else if (wasRunning && intervalId !== null) {
+                        // If both running, ensure display is updated
+                        updateTimer();
+                    } else if (intervalId === null) {
+                         // Ensure status message reflects the loaded limit
+                        statusMessage.textContent = `Limit: ${formatTime(limitSeconds)}. Press Start to begin.`;
+                        statusMessage.style.color = "var(--primary-dark)";
+                    }
+                } else {
+                    // Initialize if no document exists
+                    setDailyLimit();
+                }
+            }, (error) => {
+                console.error("Error loading state from Firestore:", error);
+            });
+        }
+
+
+        // --- Event Listeners and Initialization ---
+
+        window.onload = function() {
+            initializeFirebase();
+
+            startStopBtn.addEventListener('click', startStopTimer);
+            resetBtn.addEventListener('click', resetTimer);
+            setLimitBtn.addEventListener('click', setDailyLimit);
+        };
+    </script>
+</body>
+</html>
