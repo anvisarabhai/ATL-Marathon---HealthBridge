@@ -4,26 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Health Bridge - Choose Your Path</title>
-    <link rel="icon" type="image/x-icon" href="logo.jpg">
+    <link rel="icon" type="image/x-icon" href="logo.jpg" alt="Health Bridge Logo">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Custom styles for the options.html layout */
+        .path-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+        
+        /* Redefine cta-btn for a card-like appearance in path-options */
+        .path-options .cta-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            font-size: 1.5rem;
+            text-align: center;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background-color: var(--surface-color);
+            color: var(--primary-dark);
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .path-options .cta-btn:hover {
+            background-color: var(--light-accent);
+            color: var(--text-color-light);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 10px 20px rgba(168, 142, 174, 0.5);
+        }
+
+        .path-options .icon-large {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 600px) {
+            .path-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="logo">Health Bridge</div>
         <ul class="nav-links">
             <li><a href="index.html">Home Page</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="about.html">About Us</a></li>
         </ul>
     </nav>
 
-    <!-- Main Banner -->
-    <div class="banner">
-        <p>Choose Your Path</p>
-        <div class="options">
-            <a href="mental.html" class="cta-btn">Mental</a>
-            <a href="physical.html" class="cta-btn">Physical</a>
+    <main>
+        <div class="banner">
+            <div>
+                <h1>Choose Your Path</h1> 
+                <p class="description">Select your focus to begin your journey toward lasting wellness.</p>
+            </div>
         </div>
-    </div>
+
+        <!-- New Card-like Options -->
+        <div class="path-options">
+            <a href="mental.html" class="cta-btn">
+                <span class="icon-large">🧠</span>
+                Mental Wellness
+            </a>
+            <a href="physical.html" class="cta-btn">
+                <span class="icon-large">💪</span>
+                Physical Fitness
+            </a>
+        </div>
+        
+        <!-- Health Definitions with Image Placeholders -->
+        <div class="health-definitions">
+            <div class="definition-card">
+                <h3>Mental Health</h3>
+                <!-- Visual Placeholder for Mental Health -->
+                <div class="visual-placeholder card-image">
+                    <p>IMAGE PLACEHOLDER: Serenity/Mind</p>
+                </div>
+                <p>It is a state of emotional, psychological, and social well-being that affects how you think, feel, and act. It helps you handle stress, build relationships, make decisions, and contribute to your community. Good mental health means more than just the absence of illness.</p>
+            </div>
+            <div class="definition-card">
+                <h3>Physical Health</h3>
+                <!-- Visual Placeholder for Physical Health -->
+                <div class="visual-placeholder card-image">
+                    <p>IMAGE PLACEHOLDER: Activity/Body</p>
+                </div>
+                <p>It refers to the condition of your body and how well it functions. It involves maintaining a healthy lifestyle through regular exercise, balanced nutrition, adequate rest, and avoiding harmful habits. Good physical health means having the energy to perform daily activities and reducing the risk of illness or injury.</p>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
