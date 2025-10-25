@@ -5,9 +5,7 @@
      <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mental Wellness Quiz</title>
-    <!-- Load Raleway and Open Sans fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Custom color variables from user's CSS
@@ -47,9 +45,25 @@
             font-family: 'Open Sans', sans-serif;
             color: var(--text-color-dark);
             background-color: var(--background-color);
+            padding-top: 80px; /* Space for the fixed navbar */
         }
+        
+        /* --- FIX 1: Ensure result section is hidden immediately on load, even if CDN fails --- */
+        .hidden {
+            display: none !important;
+        }
+        /* --------------------------------------------------------------------------------- */
 
-        /* NEW: Custom background for the main quiz container for more color/texture */
+        /* --- NEW FIX 1: Robust Centering for Header and Button containers (replacing Tailwind's 'text-center') --- */
+        header {
+            text-align: center;
+        }
+        .text-center {
+            text-align: center;
+        }
+        /* -------------------------------------------------------------------------------------------------------- */
+
+        /* Custom background for the main quiz container */
         .main-quiz-container {
             background: linear-gradient(150deg, var(--surface-color) 0%, #FAFAFA 100%);
             box-shadow: 0 10px 30px var(--shadow-color);
@@ -104,15 +118,15 @@
         
         /* Hover style for the option label */
         .option-card label:hover {
-            background-color: rgba(168, 142, 174, 0.15); /* Light accent background on hover */
-            border-color: var(--accent-color); /* Stronger border on hover */
+            background-color: rgba(168, 142, 174, 0.15); 
+            border-color: var(--accent-color); 
         }
         
         /* Style for the selected card using custom accent colors */
         .option-card input:checked + label {
-            border-color: var(--accent-color); /* Accent border for selected */
-            background-color: rgba(168, 142, 174, 0.08); /* Light accent background with transparency */
-            box-shadow: 0 0 0 3px rgba(168, 142, 174, 0.4); /* Inner ring glow */
+            border-color: var(--accent-color); 
+            background-color: rgba(168, 142, 174, 0.08); 
+            box-shadow: 0 0 0 3px rgba(168, 142, 174, 0.4); 
         }
         
         /* Checkmark on selection */
@@ -142,9 +156,9 @@
         /* Style the label content */
         .option-card label {
             display: block;
-            padding: 1rem 1rem 1rem 3rem; /* Extra space for the letter prefix */
+            padding: 1rem 1rem 1rem 3rem; 
             position: relative;
-            transition: background-color 0.2s ease, border-color 0.2s ease; /* Ensure smooth transition */
+            transition: background-color 0.2s ease, border-color 0.2s ease; 
         }
         
         /* Style the option prefix (A, B, C, D) */
@@ -189,21 +203,29 @@
             border: 2px solid var(--accent-color);
         }
 
+        /* --- NEW FIX 2: Ensure Result content is centered, except for the action list --- */
         .result-content {
             background-color: var(--surface-color);
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Center all text content inside the results card */
         }
+        /* ------------------------------------------------------------------------------- */
 
         /* Custom List Styling for Action Plan to use accent color bullets */
         #actionList {
             padding-left: 0;
             list-style: none; /* Remove default bullets */
+            text-align: left; /* Override centering for the list items */
+            max-width: 500px; /* Constrain width for readability */
+            margin-left: auto; /* Center the list block */
+            margin-right: auto; /* Center the list block */
         }
         #actionList li {
             position: relative;
             padding-left: 1.5rem; /* Space for custom bullet */
+            margin-bottom: 8px;
         }
         #actionList li::before {
             content: '•';
@@ -214,9 +236,15 @@
             font-size: 1.5rem;
             line-height: 1;
         }
-
-        /* NEW STYLE: Take Quiz Again Button using accent color */
+        
+        /* Fix for 'Take Quiz Again' button styling */
         #resetButton {
+            /* Sizing and Shape (from previous Tailwind classes py-3 px-6 rounded-full) */
+            padding: 12px 24px; 
+            border-radius: 9999px; 
+            border: none; /* Remove the black default button border */
+
+            /* Existing custom styles */
             background-color: var(--accent-color);
             color: var(--text-color-light);
             font-weight: 700;
@@ -238,12 +266,12 @@
         <ul class="nav-links">
             <li><a href="index.html">Home Page</a></li>
             <li><a href="about.html">About Us</a></li>
+            <li><a href="support.html">Support</a></li>
         </ul>
-    </nav><br>
-    <!-- Use the new custom class for the main container styling -->
+    </nav>
+    
     <div class="max-w-4xl mx-auto rounded-lg p-6 sm:p-10 main-quiz-container">
         
-        <!-- Header -->
         <header class="text-center mb-12">
             <h1 class="text-4xl sm:text-5xl font-display font-black text-primary-dark mb-2">
                 <span style="color:var(--accent-color);">/</span> Mental Wellness Check <span style="color:var(--accent-color);">/</span>
@@ -257,20 +285,19 @@
         </header>
 
         <form id="quizForm">
-            <!-- Question 1 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">01.</span>
                     <p class="question-text">When you feel overwhelmed, what’s your first instinct?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q1a" name="q1" value="A" required>
                         <label for="q1a" data-prefix="A">I shut down or go quiet.</label>
                     </div>
                     <div class="option-card">
                         <input type="radio" id="q1b" name="q1" value="B">
-                        <label for="q1b" data-prefix="B">I distract myself with something (scrolling, eating, gaming, etc.).</label>
+                        <label for="q1b" data-prefix="B">I distract myself (scrolling, eating, gaming, etc.).</label>
                     </div>
                     <div class="option-card">
                         <input type="radio" id="q1c" name="q1" value="C">
@@ -283,13 +310,12 @@
                 </div>
             </div>
 
-            <!-- Question 2 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">02.</span>
-                    <p class="question-text">Do you ever feel like you’re running on autopilot — doing things without really feeling present?</p>
+                    <p class="question-text">Do you ever feel like you’re running on autopilot, doing things without really feeling present?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q2a" name="q2" value="A" required>
                         <label for="q2a" data-prefix="A">I often feel emotionally flat or disconnected.</label>
@@ -309,39 +335,37 @@
                 </div>
             </div>
 
-            <!-- Question 3 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">03.</span>
-                    <p class="question-text">How often do you find yourself avoiding silence or being alone with your thoughts?</p>
+                    <p class="question-text">How often do you avoid silence or being alone with your thoughts?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q3a" name="q3" value="A" required>
-                        <label for="q3a" data-prefix="A">Because silence makes me feel empty or sad.</label>
+                        <label for="q3a" data-prefix="A">Silence makes me feel empty or sad.</label>
                     </div>
                     <div class="option-card">
                         <input type="radio" id="q3b" name="q3" value="B">
-                        <label for="q3b" data-prefix="B">Because I instantly reach for something (scrolling, music, food, etc.).</label>
+                        <label for="q3b" data-prefix="B">I instantly reach for a distraction (phone, music, food, etc.).</label>
                     </div>
                     <div class="option-card">
                         <input type="radio" id="q3c" name="q3" value="C">
-                        <label for="q3c" data-prefix="C">Because my thoughts start racing and I overthink.</label>
+                        <label for="q3c" data-prefix="C">My thoughts start racing and I overthink.</label>
                     </div>
                     <div class="option-card">
                         <input type="radio" id="q3d" name="q3" value="D">
-                        <label for="q3d" data-prefix="D">I don’t think about it — I just drift away from it.</label>
+                        <label for="q3d" data-prefix="D">I just drift away from it without thinking about it.</label>
                     </div>
                 </div>
             </div>
 
-            <!-- Question 4 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">04.</span>
                     <p class="question-text">When something good happens, how easy is it for you to actually feel happy about it?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q4a" name="q4" value="A" required>
                         <label for="q4a" data-prefix="A">I struggle to feel joy, even in good moments.</label>
@@ -361,13 +385,12 @@
                 </div>
             </div>
 
-            <!-- Question 5 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">05.</span>
-                    <p class="question-text">Do you ever use certain habits (like social media, substances, food, etc.) to escape emotions you don’t want to deal with?</p>
+                    <p class="question-text">Do you use habits (like social media, substances, food) to escape emotions you don’t want to deal with?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q5a" name="q5" value="A" required>
                         <label for="q5a" data-prefix="A">To block out sadness or emptiness.</label>
@@ -387,13 +410,12 @@
                 </div>
             </div>
 
-            <!-- Question 6 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">06.</span>
                     <p class="question-text">How often do you feel like you’re “keeping it together” for others, even when you’re not okay inside?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q6a" name="q6" value="A" required>
                         <label for="q6a" data-prefix="A">I feel like I’m pretending most of the time.</label>
@@ -413,13 +435,12 @@
                 </div>
             </div>
 
-            <!-- Question 7 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">07.</span>
                     <p class="question-text">When was the last time you felt genuinely proud of yourself — not for what you did, but for who you are?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q7a" name="q7" value="A" required>
                         <label for="q7a" data-prefix="A">I can’t remember feeling that way.</label>
@@ -439,13 +460,12 @@
                 </div>
             </div>
 
-            <!-- Question 8 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">08.</span>
-                    <p class="question-text">Do you ever catch yourself chasing a quick boost — like checking messages, likes, or notifications — to feel okay for a bit?</p>
+                    <p class="question-text">Do you ever chase a quick boost (like checking messages, likes, or notifications) to feel okay for a bit?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q8a" name="q8" value="A" required>
                         <label for="q8a" data-prefix="A">Because I feel low and need something to lift me.</label>
@@ -465,13 +485,12 @@
                 </div>
             </div>
 
-            <!-- Question 9 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">09.</span>
-                    <p class="question-text">How often do you feel disconnected from your own emotions — like you know what you should feel, but don’t actually feel it?</p>
+                    <p class="question-text">How often do you feel disconnected from your own emotions, like they’re muted?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q9a" name="q9" value="A" required>
                         <label for="q9a" data-prefix="A">Frequently — it’s like my emotions are muted.</label>
@@ -491,13 +510,12 @@
                 </div>
             </div>
 
-            <!-- Question 10 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">10.</span>
-                    <p class="question-text">Do you sometimes crave control — over your time, emotions, or routines — because things feel too uncertain otherwise?</p>
+                    <p class="question-text">Do you sometimes crave control over your time, emotions, or routines because things feel too uncertain otherwise?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q10a" name="q10" value="A" required>
                         <label for="q10a" data-prefix="A">I lose motivation when I can’t control things.</label>
@@ -517,13 +535,12 @@
                 </div>
             </div>
 
-            <!-- Question 11 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">11.</span>
                     <p class="question-text">When you make a mistake, what’s your usual inner voice like?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q11a" name="q11" value="A" required>
                         <label for="q11a" data-prefix="A">Harsh — I feel worthless or defeated.</label>
@@ -543,13 +560,12 @@
                 </div>
             </div>
 
-            <!-- Question 12 -->
             <div class="question-card">
                 <div class="question-title">
                     <span class="question-number">12.</span>
                     <p class="question-text">If someone truly knew everything you’re feeling lately, would you feel relieved — or scared?</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-2">
+                <div class="grid gap-3 grid-cols-1">
                     <div class="option-card">
                         <input type="radio" id="q12a" name="q12" value="A" required>
                         <label for="q12a" data-prefix="A">Scared — I’d feel exposed or unworthy.</label>
@@ -569,157 +585,139 @@
                 </div>
             </div>
 
-            <button type="submit" class="cta-btn-custom w-full font-display font-bold py-3 rounded-full transition duration-300 text-lg shadow-lg">
-                Get My Results (12/12)
-            </button>
+            <div class="text-center mt-10">
+                <button type="submit" class="cta-btn-custom">
+                    Get My Results
+                </button>
+            </div>
         </form>
 
-        <!-- Result Section (Initially Hidden) -->
-        <div id="resultsContainer" class="hidden mt-10 p-6 sm:p-8 rounded-lg shadow-xl">
-            <h2 class="text-3xl font-display font-bold text-center text-primary-dark mb-4 border-b-2 border-accent-color pb-2">Your Wellness Check-In Result</h2>
-            <p id="resultIntro" class="text-center text-xl text-text-color-dark mb-8">Based on your answers, your dominant coping pattern leans towards:</p>
-            
+        <section id="resultsContainer" class="mt-16 hidden rounded-lg p-8 shadow-2xl">
             <div class="result-content">
-                <h3 id="resultTitle" class="text-4xl font-display font-extrabold text-center mb-4 transition duration-500"></h3>
-                <p id="resultSummary" class="text-lg text-text-color-dark text-center mb-6"></p>
+                <h2 class="text-3xl font-display font-black mb-4 border-b pb-2 text-primary-dark">Your Mental Wellness Status</h2>
                 
-                <div id="actionPlan" class="mt-6 p-5 bg-light-accent/20 rounded-lg border-2 border-accent-color">
-                    <p class="font-bold text-primary-dark text-xl font-display mb-3">💡 Next Steps & Reflection:</p>
-                    <!-- actionList now relies on custom CSS for themed bullets -->
-                    <ul id="actionList" class="text-text-color-dark space-y-2 pl-4"></ul>
+                <h3 id="resultTitle" class="text-3xl font-bold mb-4"></h3>
+                <p id="resultSummary" class="text-lg mb-6"></p>
+
+                <h4 class="text-xl font-display font-bold mb-3 text-primary-dark">Suggested Action Plan:</h4>
+                <ul id="actionList" class="text-text-color-dark space-y-2">
+                    </ul>
+                
+                <div class="mt-8 text-center space-x-4">
+                    <a href="support.html" class="cta-btn-custom">
+                        Access Support Resources
+                    </a>
+                    <button id="resetButton" type="button">
+                        Take Quiz Again
+                    </button>
                 </div>
             </div>
-
-            <!-- Disclaimer -->
-            <p class="text-xs italic text-text-color-dark/70 mt-6 text-center">
-                This quiz is for self-reflection and informational purposes only. It is **not** a diagnostic tool. If you are experiencing distress, please seek help from a qualified healthcare professional.
-            </p>
-
-            <!-- UPDATED BUTTON ID and CLASS -->
-            <button id="resetButton" onclick="document.getElementById('quizForm').reset(); document.getElementById('resultsContainer').classList.add('hidden'); window.scrollTo(0, 0);" 
-                    class="mt-6 w-full font-bold py-3 rounded-full transition duration-300">
-                Take Quiz Again
-            </button>
-        </div>
-        
-        <!-- Error Message Container (for validation) -->
-        <div id="errorMessage" class="hidden mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
-            <p class="font-bold">Heads up!</p>
-            <p>Please answer all 12 questions before submitting the quiz.</p>
-        </div>
+        </section>
 
     </div>
 
     <script>
+        // --- DATA ---
+
+        // Define the results based on the dominant letter
+        const resultDefinitions = {
+            'A': {
+                title: 'Primary Pattern: Depression',
+                summary: 'Your responses suggest patterns common to **depression**, such as feeling shut down, emotionally flat, and struggling to find joy. These feelings are often linked to emptiness or sadness.',
+                actions: [
+                    'We strongly recommend prioritizing self-care and professional evaluation.',
+                    'Focus on small, achievable daily goals to rebuild momentum.',
+                    'Visit our Support page for resources related to Depression and immediate help lines.'
+                ],
+                color: '#D9534F' // Red
+            },
+            'B': {
+                title: 'Primary Pattern: Addiction / Escapism',
+                summary: 'Your responses point toward escapism and a reliance on distractions (scrolling, gaming, food, etc.) to manage uncomfortable emotions or maintain a quick high. This pattern can lead to **addiction**.',
+                actions: [
+                    'Explore our Digital Wellness Tracker (on the Addiction page) to set healthy limits on distracting habits.',
+                    'Identify the core emotion you are trying to escape instead of the distraction itself.',
+                    'Consider counseling focused on impulse control and healthy coping mechanisms.'
+                ],
+                color: '#FFA500' // Orange
+            },
+            'C': {
+                title: 'Primary Pattern: Anxiety / Control-Oriented',
+                summary: 'Your answers indicate a strong need for control, structure, and vigilance. This is often driven by **anxiety** and a fear of uncertainty, leading to overthinking and self-criticism.',
+                actions: [
+                    'Practice simple grounding techniques (like the 5-4-3-2-1 method) when thoughts are racing.',
+                    'Incorporate mindful moments into your routine to learn to tolerate uncertainty.',
+                    'Seek professional help to develop strategies for managing anxiety and letting go of perfectionism.'
+                ],
+                color: '#FFD700' // Gold/Yellow
+            },
+            'D': {
+                title: 'Primary Pattern: Emotional Burnout / Dissociation',
+                summary: 'Your results suggest emotional detachment, numbness, and feeling like you are running on autopilot. This is often a sign of deep burnout or **dissociation**, where your mind disconnects from reality to cope with stress.',
+                actions: [
+                    'Focus on re-engaging your senses (e.g., cold water on the face, strong scents) to practice grounding.',
+                    'Consult a therapist, as dissociation can be a complex coping mechanism requiring specialized care.',
+                    'Ensure you are getting adequate rest and reducing your overall stress load immediately.'
+                ],
+                color: '#61A36A' // Green/Calm
+            }
+        };
+
+        // --- FUNCTIONS ---
+
+        function getResult(counts) {
+            let dominantLetter = null;
+            let maxCount = -1;
+
+            // Find the letter with the highest count
+            const entries = Object.entries(counts);
+
+            for (const [letter, count] of entries) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    dominantLetter = letter;
+                }
+            }
+            // If no dominant letter found, default to 'A'
+            return resultDefinitions[dominantLetter] || resultDefinitions['A']; 
+        }
+
+        // --- MAIN LOGIC ---
+
         const quizForm = document.getElementById('quizForm');
         const resultsContainer = document.getElementById('resultsContainer');
         const resultTitle = document.getElementById('resultTitle');
         const resultSummary = document.getElementById('resultSummary');
         const actionList = document.getElementById('actionList');
-        const errorMessage = document.getElementById('errorMessage');
-
-        // Custom colors for result titles, now using a theme-consistent dark mauve
-        const categoryColors = {
-            // Using a darker, more saturated version of the accent color for impact
-            'A': '#884D55', 
-            'B': '#884D55', 
-            'C': '#884D55', 
-            'D': '#884D55', 
-        };
-
-        // Mapping results to descriptions and action plans
-        const resultsData = {
-            'A': {
-                title: 'Pattern A: Emotional Withdrawal',
-                color: categoryColors['A'],
-                summary: 'Your responses suggest patterns associated with feeling low, overwhelmed, lacking joy, or dealing with inner harshness. This pattern often involves emotional withdrawal and a sense of **unworthiness**.',
-                actions: [
-                    'Focus on tiny wins: Do one small enjoyable thing today, even if you don\'t feel like it (e.g., drink water, step outside).',
-                    'Challenge your inner critic: When you feel worthless, write down two objective facts about yourself that prove otherwise.',
-                    'Prioritize connection: Reach out to one trusted person, even just to say hello. Avoid isolation.'
-                ]
-            },
-            'B': {
-                title: 'Pattern B: Escapism and Distraction',
-                color: categoryColors['B'],
-                summary: 'Your answers indicate a strong tendency toward distraction and quick hits (like scrolling, substances, or busy work) to avoid deep, uncomfortable emotions. This is a common pattern of escapism.',
-                actions: [
-                    'Practic delay and replace: When you feel the urge to escape, delay for 5 minutes and replace the habit with a grounding technique (e.g., box breathing, holding an ice cube).',
-                    'Identify triggers: Note down when and why you reach for the distraction. Knowing the "why" is the first step.',
-                    'Explore healthier hobbies: Find activities that provide flow, not just a burst of dopamine (e.g., painting, long walks, creative writing).'
-                ]
-            },
-            'C': {
-                title: 'Pattern C: Control and Overthinking',
-                color: categoryColors['C'],
-                summary: 'Your responses point toward patterns of **overthinking, planning, and a strong need for control**. This coping mechanism is often used to manage a deeper fear of uncertainty or perceived danger.',
-                actions: [
-                    'Schedule "Worry Time": Dedicate 15 minutes a day to writing down all your worries. If a worry pops up outside this time, remind yourself, "I will address this during worry time."',
-                    'Practice radical acceptance: Identify one small thing you cannot control (e.g., the weather) and consciously let go of the need to fix it.',
-                    'Ground yourself: Use 5-4-3-2-1 technique (5 things you see, 4 things you feel, 3 things you hear, 2 things you smell, 1 thing you taste) when thoughts start racing.'
-                ]
-            },
-            'D': {
-                title: 'Pattern D: Emotional Numbness / Burnout',
-                color: categoryColors['D'],
-                summary: 'Your results suggest a pattern of emotional numbness and detachment. This is often a sign of burnout where the system has shut down to protect itself from prolonged, overwhelming stress.',
-                actions: [
-                    'Engage the senses: Use intense physical sensations to ground yourself (e.g., bright cold water on your face, strong smells like peppermint, sour candy).',
-                    'Start gentle movement: Light stretching or walking can help reconnect the mind and body. Avoid pushing yourself too hard.',
-                    'Check your needs: Make sure you are meeting basic survival needs: eating, sleeping, and resting. Extreme burnout requires rest, not pushing through.'
-                ]
-            },
-        };
+        const resetButton = document.getElementById('resetButton');
 
         quizForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            errorMessage.classList.add('hidden'); // Hide any previous error
 
+            // 1. Count the number of A, B, C, D answers
+            let counts = { 'A': 0, 'B': 0, 'C': 0, 'D': 0 };
             const formData = new FormData(quizForm);
-            const questionCount = 12;
-            const answers = {};
-            let isComplete = true;
-
-            // 1. Tally the answers
-            for (let i = 1; i <= questionCount; i++) {
-                const answer = formData.get(`q${i}`);
-                if (!answer) {
-                    isComplete = false;
-                    break;
-                }
-                answers[answer] = (answers[answer] || 0) + 1;
-            }
-
-            // 2. Validation
-            if (!isComplete) {
-                errorMessage.classList.remove('hidden');
-                resultsContainer.classList.add('hidden');
-                return;
-            }
-
-            // 3. Determine the dominant category (highest count)
-            let dominantCategory = 'A';
-            let maxCount = -1;
-
-            // Iterate over the categories (A, B, C, D) to find the max
-            ['A', 'B', 'C', 'D'].forEach(key => {
-                const count = answers[key] || 0;
-                if (count > maxCount) {
-                    maxCount = count;
-                    dominantCategory = key;
-                }
-            });
-
-            // 4. Update the results container
-            const result = resultsData[dominantCategory];
             
-            // Apply the theme-consistent color defined in the JS object
+            // Loop through all 12 questions (q1 to q12)
+            for (let i = 1; i <= 12; i++) {
+                const answer = formData.get(`q${i}`);
+                if (answer in counts) {
+                    counts[answer]++;
+                }
+            }
+            
+            // 2. Determine the dominant pattern and get the result data
+            const dominantKey = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+
+            const result = getResult(counts);
+            
+            // 3. Update the UI with the result
             resultTitle.textContent = result.title;
-            resultTitle.style.color = categoryColors[dominantCategory]; 
+            resultTitle.style.color = result.color; 
             
             resultSummary.textContent = result.summary;
             
-            // Populate action plan list
+            // 4. Populate action plan list
             actionList.innerHTML = '';
             result.actions.forEach(action => {
                 const li = document.createElement('li');
@@ -728,19 +726,37 @@
             });
 
             // 5. Show results and scroll to them
-            resultsContainer.classList.remove('hidden');
+            resultsContainer.classList.remove('hidden'); 
+            quizForm.classList.add('hidden'); // Hide the quiz form
             window.scrollTo({
                 top: resultsContainer.offsetTop - 20,
                 behavior: 'smooth'
             });
         });
 
-        // Add event listeners to the option cards to handle the click visually
+        // Reset functionality
+        resetButton.addEventListener('click', function() {
+            quizForm.reset();
+            resultsContainer.classList.add('hidden');
+            quizForm.classList.remove('hidden'); // Show the form again
+            
+            // Clear all checked card styles
+            document.querySelectorAll('.option-card input:checked + label').forEach(label => {
+                 // Trigger the CSS uncheck state
+                 label.previousElementSibling.checked = false; 
+            });
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+
+        // Add event listeners to the option card labels to handle the click visually
         document.querySelectorAll('.option-card label').forEach(label => {
             label.addEventListener('click', function(e) {
-                // Prevent default form submission on label click
-                e.preventDefault(); 
-                
+                // Find the associated radio button ID
                 const inputId = this.getAttribute('for');
                 const inputElement = document.getElementById(inputId);
                 
@@ -750,7 +766,6 @@
                 }
             });
         });
-
     </script>
 </body>
 </html>

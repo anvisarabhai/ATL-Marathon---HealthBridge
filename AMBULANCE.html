@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Bridge - Emergency Ambulance Dispatch</title>
+    <link rel="icon" type="image/x-icon" href="logo.jpg" alt="Health Bridge Logo">
+
+    <style>
+        @import url('https://fonts.com/css2?family=Raleway:wght@300;400;700;900&family=Open+Sans:wght@400;600&display=swap');
+
+        :root {
+            --primary-dark: #343D54;
+            --accent-color: #A88EAE;
+            --light-accent: #C7B9CC;
+            --background-color: #F7F7F7;
+            --surface-color: #FFFFFF;
+            --text-color-dark: #444444;
+            --text-color-light: #FFFFFF;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --emergency-red: #D9534F; 
+            --success-green: #5CB85C; 
+            --cancel-dark: #6C757D; /* Dark gray for cancel action */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color-dark);
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px; 
+            box-sizing: border-box;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+            margin: 0 auto;
+        }
+
+        /* --- Navbar Styles --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--primary-dark);
+            color: var(--text-color-light);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+        }
+
+        .logo {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--text-color-light); /* Changed color to white */
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: var(--text-color-light);
+            text-decoration: none;
+            font-weight: 400;
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--light-accent);
+        }
+
+        /* --- Banner & CTA Styles --- */
+        .banner {
+            background-color: #FEF0F0;
+            border: 2px solid var(--emergency-red);
+            padding: 40px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .banner h1 {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 900;
+            font-size: 2.5rem;
+            color: var(--emergency-red);
+            margin: 0 0 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--emergency-red);
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-color-light);
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.1s;
+            text-transform: uppercase;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            margin: 5px; 
+        }
+
+        .cta-btn:hover {
+            background-color: #8D7494; 
+            transform: translateY(-1px);
+        }
+        
+        /* Red emergency button style */
+        .cta-btn.emergency {
+            background-color: var(--emergency-red);
+        }
+
+        .cta-btn.emergency:hover {
+            background-color: #C0392B;
+        }
+        
+        /* Cancel button style */
+        .cta-btn.cancel {
+            background-color: var(--cancel-dark);
+            font-size: 0.9rem;
+            padding: 8px 15px;
+        }
+        
+        .cta-btn.cancel:hover {
+            background-color: #5A6268;
+        }
+
+        /* Immediate Dispatch Button Styling */
+        .cta-btn.immediate {
+            background-color: #FF7F00; /* Bright Orange for immediate action */
+            font-size: 1.4rem;
+            padding: 15px 30px;
+            border-radius: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .cta-btn.immediate:hover {
+            background-color: #E06000;
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 127, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 127, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 127, 0, 0); }
+        }
+
+        /* --- Form and Step Styles --- */
+
+        .form-card {
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background-color: var(--light-accent);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step-item {
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-accent);
+            color: var(--text-color-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 5px;
+            transition: background-color 0.3s;
+            border: 3px solid var(--surface-color);
+            box-shadow: 0 0 0 2px var(--light-accent);
+        }
+
+        .step-item.active .step-circle {
+            background-color: var(--accent-color);
+            box-shadow: 0 0 0 3px var(--accent-color);
+        }
+
+        .step-item.complete .step-circle {
+            background-color: var(--success-green);
+            box-shadow: 0 0 0 3px var(--success-green);
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--text-color-dark);
+            text-align: center;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light-accent);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        /* Emergency Specific Styles */
+        .emergency-alert {
+            background-color: #FEEAEB; 
+            border: 1px solid var(--emergency-red);
+            color: var(--emergency-red);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .confirmation-summary {
+            background-color: var(--background-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-summary p {
+            margin: 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--light-accent);
+        }
+
+        .confirmation-summary strong {
+            color: var(--primary-dark);
+        }
+
+        .dispatch-status {
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 12px;
+            background-color: var(--surface-color);
+            border: 3px solid var(--success-green);
+        }
+
+        .dispatch-status.canceled {
+            border: 3px solid var(--cancel-dark);
+        }
+
+        .dispatch-status h2 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .dispatch-status h2.success {
+             color: var(--success-green);
+        }
+        
+        .dispatch-status h2.cancel {
+             color: var(--cancel-dark);
+        }
+
+        .dispatch-status .eta {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--emergency-red);
+            margin: 20px 0;
+            display: block;
+        }
+
+        .dispatch-status .small-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 20px;
+            }
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Health Bridge</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home Page</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="banner">
+            <h1>EMERGENCY AMBULANCE DISPATCH</h1>
+            <p class="tagline">IMMEDIATE CRITICAL CARE RESPONSE</p>
+            
+            <button type="button" class="cta-btn immediate" onclick="immediateDispatch()">
+                🚨 ONE-TOUCH IMMEDIATE DISPATCH
+            </button>
+            
+            <p style="font-size: 0.9rem; margin-top: 10px;">
+                **For less urgent situations:** Fill out the form below quickly and accurately to dispatch the nearest unit.
+            </p>
+        </div>
+
+        <div class="form-card" id="ambulance-system">
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div id="step1-item" class="step-item">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Patient Details</div>
+                </div>
+                <div id="step2-item" class="step-item">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Review & Confirm</div>
+                </div>
+                <div id="step3-item" class="step-item">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Dispatch Status</div>
+                </div>
+            </div>
+
+            <div id="step-content">
+                <!-- Content will be injected here by JavaScript -->
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // No localStorage is used now. State is purely in-memory.
+        const IMMEDIATE_CONTACT_PLACEHOLDER = '911 (Emergency Line)'; 
+        
+        // Define a constant for the initial state for easy reset
+        const initialDispatchState = {
+            currentStep: 1,
+            dispatchData: {
+                name: '',
+                location: '',
+                condition: '',
+                contact: ''
+            },
+            isLive: false,
+            timestamp: 0,
+            etaMinutes: 0,
+            status: ''
+        };
+
+        // Global state object, initialized with a clean state on every page load
+        let dispatchState = { ...initialDispatchState };
+
+        let dispatchInterval = null;
+
+        const stepContent = document.getElementById('step-content');
+
+        // --- State Management ---
+
+        function clearDispatchState(andRender = true) {
+            // Stop any active countdown
+            if (dispatchInterval) {
+                clearInterval(dispatchInterval);
+                dispatchInterval = null;
+            }
+            // Reset to initial state, preserving the current status if not rendering 
+            // to allow the 'Canceled' screen to show before a full reset.
+            const previousStatus = dispatchState.status;
+            dispatchState = { ...initialDispatchState };
+            
+            if (andRender) {
+                renderStep(1); // Reset to the first step
+            } else {
+                 // If not rendering immediately, keep the previous status for the final screen
+                 dispatchState.status = previousStatus;
+            }
+        }
+        
+        // Initialization function is simpler now
+        function initializeApp() {
+            // Always start at step 1 on page load.
+            renderStep(1);
+        }
+
+        // --- Step Rendering Functions ---
+
+        function updateStepIndicator() {
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                item.classList.remove('active', 'complete');
+                const step = index + 1;
+                if (step < dispatchState.currentStep) {
+                    item.classList.add('complete');
+                } else if (step === dispatchState.currentStep) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        function renderStep(step) {
+            // Clean up any running countdown interval when changing steps
+            if (dispatchInterval) {
+                clearInterval(dispatchInterval);
+                dispatchInterval = null;
+            }
+            
+            dispatchState.currentStep = step;
+            updateStepIndicator();
+            stepContent.innerHTML = ''; // Clear current content
+
+            switch (step) {
+                case 1:
+                    renderDetailsStep();
+                    break;
+                case 2:
+                    renderConfirmationStep();
+                    break;
+                case 3:
+                    renderDispatchStatusStep(dispatchState.status);
+                    break;
+            }
+            // State is updated in memory, but not persisted.
+        }
+
+        function renderDetailsStep() {
+            // Use current state data to pre-populate fields, useful if the user hits 'Back'
+            const data = dispatchState.dispatchData;
+
+            stepContent.innerHTML = `
+                <div class="emergency-alert">
+                    <p>🚨 **Dial Local Emergency Number First if possible!** 🚨</p>
+                </div>
+                <form id="details-form">
+                    <div class="form-group">
+                        <label for="name">Patient Name / Caller Name</label>
+                        <input type="text" id="name" required value="${data.name}">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Incident Location / Address (Be Specific)</label>
+                        <textarea id="location" required rows="3">${data.location}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="condition">Patient Condition / Symptoms (Briefly)</label>
+                        <input type="text" id="condition" required value="${data.condition}">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact Number (For Dispatcher)</label>
+                        <input type="tel" id="contact" required value="${data.contact}">
+                    </div>
+                    <button type="submit" class="cta-btn emergency" style="width: 100%;">Continue to Confirmation</button>
+                </form>
+            `;
+
+            document.getElementById('details-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Save data from form inputs to in-memory state
+                dispatchState.dispatchData.name = document.getElementById('name').value;
+                dispatchState.dispatchData.location = document.getElementById('location').value;
+                dispatchState.dispatchData.condition = document.getElementById('condition').value;
+                dispatchState.dispatchData.contact = document.getElementById('contact').value;
+                renderStep(2);
+            });
+        }
+
+        function renderConfirmationStep() {
+            const data = dispatchState.dispatchData;
+            stepContent.innerHTML = `
+                <h3>Review Your Emergency Details</h3>
+                <div class="confirmation-summary">
+                    <p><strong>Caller/Patient:</strong> ${data.name}</p>
+                    <p><strong>Incident Location:</strong> ${data.location}</p>
+                    <p><strong>Condition:</strong> ${data.condition}</p>
+                    <p><strong>Contact:</strong> ${data.contact}</p>
+                </div>
+                <div class="emergency-alert">
+                    <p>By clicking "Dispatch Now," you are confirming a real emergency. **Double-check the contact number!**</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="cta-btn" style="background-color: var(--light-accent);" onclick="renderStep(1)">Edit Details</button>
+                    <button type="button" class="cta-btn emergency" style="flex-grow: 1;" onclick="dispatchAmbulance()">DISPATCH AMBULANCE NOW</button>
+                </div>
+            `;
+        }
+        
+        // --- Dispatch Logic ---
+
+        function dispatchAmbulance() {
+            const now = Date.now();
+            
+            // Set new live dispatch state
+            dispatchState.isLive = true;
+            dispatchState.status = 'Dispatched';
+            dispatchState.timestamp = now;
+            // Random ETA between 5 and 9 minutes (in minutes)
+            dispatchState.etaMinutes = Math.floor(Math.random() * 5) + 5; 
+            
+            renderStep(3); // Move to status screen
+        }
+
+        // --- Immediate Dispatch Logic (Skips Form) ---
+        function immediateDispatch() {
+            // Set default/placeholder data as if the server received a single click
+            dispatchState.dispatchData.name = 'Caller Unknown / No Time to Type';
+            dispatchState.dispatchData.location = 'Location: GPS/Cell Tower Triangulation (Best Guess)';
+            dispatchState.dispatchData.condition = 'Critical: Immediate Response Required';
+            dispatchState.dispatchData.contact = IMMEDIATE_CONTACT_PLACEHOLDER; 
+            
+            // Proceed directly to the main dispatch function
+            dispatchAmbulance();
+        }
+
+        // --- Cancellation Logic ---
+        function cancelDispatch() {
+            // 1. Stop the countdown and clear live data (but don't reset to Step 1 yet)
+            clearDispatchState(false); 
+            // 2. Set the final status
+            dispatchState.status = 'Canceled';
+            // 3. Re-render the status screen to show the Canceled message
+            renderStep(3);
+        }
+
+
+        // --- Status and Tracking Logic ---
+
+        function simulateArrival() {
+            dispatchState.status = 'Arrived';
+            renderStep(3); // Re-render the final status screen
+        }
+        
+        function renderDispatchStatusStep(status) {
+            
+            const isFinished = status === 'Arrived' || status === 'Complete';
+            const isCanceled = status === 'Canceled';
+
+            // Final status screen (Arrived, Complete, or Canceled)
+            if (isFinished || isCanceled) {
+                 const statusClass = isCanceled ? 'canceled' : '';
+                 const statusColorClass = isCanceled ? 'cancel' : 'success';
+                 const statusText = isCanceled 
+                    ? '❌ DISPATCH CANCELED ❌' 
+                    : (status === 'Arrived' ? '✅ Ambulance Status: ARRIVED ON SCENE ✅' : 'SERVICE COMPLETE');
+                 const finalMessage = isCanceled 
+                    ? 'The dispatch unit has been successfully recalled. Thank you for notifying us.'
+                    : 'If you need further assistance, please contact local authorities.';
+
+                 stepContent.innerHTML = `
+                    <div class="dispatch-status ${statusClass}" style="border-color: ${isCanceled ? 'var(--cancel-dark)' : 'var(--success-green)'};">
+                        <h2 class="${statusColorClass}">${statusText}</h2>
+                        <p class="eta" style="color: ${isCanceled ? 'var(--cancel-dark)' : 'var(--primary-dark)'}; font-size: 1.8rem;">SERVICE CONCLUDED</p>
+                        <p>${finalMessage}</p>
+                        <p class="small-text">This incident has concluded. You may clear the status to start a new one.</p>
+                        <button type="button" class="cta-btn" onclick="clearDispatchState()" style="margin-top: 20px;">Start New Dispatch</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // --- Contact Display Text ---
+            const contactNumber = dispatchState.dispatchData.contact;
+            let contactText;
+
+            if (contactNumber === IMMEDIATE_CONTACT_PLACEHOLDER) {
+                // If the immediate dispatch button was used
+                contactText = 'by our emergency line.';
+            } else {
+                // If the form was filled out manually
+                contactText = `on ${contactNumber}.`;
+            }
+            // --- End Contact Display Change ---
+
+            // Calculate time remaining based on when the dispatch started
+            const updateCountdown = () => {
+                const timeElapsed = (Date.now() - dispatchState.timestamp) / 60000; // Minutes
+                let remainingMinutes = Math.max(0, dispatchState.etaMinutes - timeElapsed);
+                
+                const etaDisplay = document.getElementById('eta-display');
+                if (!etaDisplay) {
+                     // Safety check if element was removed before interval cleared
+                    clearInterval(dispatchInterval);
+                    dispatchInterval = null;
+                    return;
+                }
+                
+                if (remainingMinutes <= 0.5) {
+                    clearInterval(dispatchInterval);
+                    dispatchInterval = null;
+                    etaDisplay.textContent = "ARRIVING NOW";
+                    etaDisplay.style.color = 'var(--success-green)';
+                    // Auto-simulate arrival if ETA runs out
+                    setTimeout(simulateArrival, 10000); 
+                } else {
+                    etaDisplay.textContent = `${Math.round(remainingMinutes)} min`;
+                }
+            };
+            
+            stepContent.innerHTML = `
+                <div class="dispatch-status">
+                    <h2 class="success">Ambulance Dispatched!</h2>
+                    <p style="margin-top: 20px;">Unit is en route to your location:</p>
+                    <p class="eta" id="eta-display">Calculating...</p>
+                    <p><strong>Location:</strong> ${dispatchState.dispatchData.location}</p>
+                    <p class="small-text">Hold tight. You will be contacted shortly ${contactText}</p>
+                    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                        <button type="button" class="cta-btn emergency" onclick="simulateArrival()">I see the Ambulance</button>
+                        <button type="button" class="cta-btn cancel" onclick="cancelDispatch()">Cancel Dispatch</button>
+                    </div>
+                </div>
+            `;
+            
+            // Start the countdown simulation
+            updateCountdown(); // Initial update
+            dispatchInterval = setInterval(updateCountdown, 5000); // Update every 5 seconds
+        }
+
+        // --- Initialization ---
+
+        window.onload = initializeApp;
+    </script>
+</body>
+</html>
