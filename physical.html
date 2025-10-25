@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Bridge - Physical Health</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --primary-dark: #343D54;
+      --accent-color: #A88EAE;
+      --light-accent: #C7B9CC;
+      --background-color: #F7F7F7;
+      --surface-color: #FFFFFF;
+      --text-color-dark: #444444;
+      --text-color-light: #FFFFFF;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      color: var(--text-color-dark);
+      background-color: var(--background-color);
+      min-height: 100vh;
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: var(--primary-dark);
+      color: var(--text-color-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+
+    .navbar .content {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .logo {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-color-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--light-accent);
+    }
+
+    /* Banner */
+    .banner {
+      background-color: var(--surface-color);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      padding: 40px;
+      text-align: center;
+      border-bottom: 5px solid var(--accent-color);
+      margin-bottom: 40px;
+    }
+
+    .banner h1 {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      color: #666;
+    }
+
+    /* Grid Section */
+    .option-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      width: 100%;
+      max-width: 1200px;
+      justify-items: center;
+    }
+
+    /* 2 columns on tablets */
+    @media (min-width: 640px) {
+      .option-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* 3 columns on desktop */
+    @media (min-width: 1024px) {
+      .option-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Flex wrapper for bottom two cards */
+    .second-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    /* Card Styling */
+    .option-card {
+      background-color: var(--surface-color);
+      border: 1px solid var(--light-accent);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      text-decoration: none;
+      color: inherit;
+      width: 100%;
+      max-width: 300px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .option-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .content-box {
+      padding: 15px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-grow: 1;
+    }
+
+    .title-visual img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+    }
+
+    .content-box h3 {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .content-box p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="content">
+      <div class="logo">Health Bridge</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home Page</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="banner">
+      <h1><span class="text-accent-color">/</span> Physical Health Resources <span class="text-accent-color">/</span></h1>
+      <p class="tagline">Dedicated tools and pathways for immediate medical assistance, virtual consultation, and finding local care providers.</p>
+    </div>
+
+    <div class="option-container">
+      <!-- Top row: first 3 cards -->
+      <div class="option-grid">
+
+        <!-- Card 1 -->
+        <a href="#" class="option-card">
+          <div class="card-image">
+            <img src="amb.webp" alt="Emergency Services">
+          </div>
+          <div class="content-box">
+            <div class="title-visual">
+             <p style="font-size: 15px;"><B>AMBULANCE SERVICE</B></p>
+            </div>
+            <h3>Emergency Medical Service</h3>
+            <p>Immediate dispatch for <b>nearest ambulance</b> and critical care services for severe injuries or life-threatening crises.</p>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="#" class="option-card">
+          <div class="card-image">
+            <img src="cabby.png" alt="Transport">
+          </div>
+          <div class="content-box">
+            <div class="title-visual">
+               <div class="title-visual">
+             <p style="font-size: 15px;"><B>MEDIC AUTO/CAB SERVICE</B></p>
+            </div>
+            </div>
+            <h3>Non-Emergency Transport</h3>
+            <p>Request fast transport through <b>auto or cabs</b> for minor ailments or injuries not requiring EMS.</p>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="#" class="option-card">
+          <div class="card-image">
+            <img src="https://placehold.co/600x400/343D54/FFFFFF?text=Telehealth" alt="Virtual Care">
+          </div>
+          <div class="content-box">
+            <div class="title-visual">
+              <img src="https://placehold.co/48x48/A88EAE/FFFFFF?text=💻" alt="Monitor icon">
+            </div>
+            <h3>Virtual Telehealth & Consultation</h3>
+            <p>Connect with licensed providers for online consultations and medical advice.</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Bottom row: last 2 cards, centered -->
+      <div class="second-row">
+        <!-- Card 4 -->
+        <a href="#" class="option-card">
+          <div class="card-image">
+            <img src="https://placehold.co/600x400/A88EAE/FFFFFF?text=Local+Care" alt="Hospitals">
+          </div>
+          <div class="content-box">
+            <div class="title-visual">
+              <img src="https://placehold.co/48x48/343D54/FFFFFF?text=🏥" alt="Hospital icon">
+            </div>
+            <h3>Local Hospital & Clinic Locator</h3>
+            <p>Find nearby <b>emergency rooms</b> and clinics based on your location.</p>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a href="#" class="option-card">
+          <div class="card-image">
+            <img src="https://placehold.co/600x400/343D54/FFFFFF?text=AI+Chatbot" alt="Chatbot">
+          </div>
+          <div class="content-box">
+            <div class="title-visual">
+              <img src="https://placehold.co/48x48/A88EAE/FFFFFF?text=🤖" alt="Chatbot icon">
+            </div>
+            <h3>AI Symptom Analysis</h3>
+            <p>Use our <b>AI chatbot</b> for symptom assessment and advice for minor issues.</p>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>
