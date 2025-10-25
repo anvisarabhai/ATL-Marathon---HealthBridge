@@ -34,8 +34,15 @@
 
         /* Update idea card to include space for image */
         .idea-card {
-            display: flex;
-            flex-direction: column;
+            /* This is the item's individual style */
+            flex: 1; /* Allows it to grow and shrink equally */
+            min-width: 250px; /* Prevents shrinking too much */
+            padding: 20px;
+            background-color: var(--background-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: flex; /* Helps internal alignment */
+            flex-direction: column; 
             align-items: center;
             text-align: center;
         }
@@ -53,16 +60,31 @@
     <main>
         <div class="content-section" style="text-align: center; max-width: 900px;">
             <h2>Our Mission & Vision</h2>
-            <p class="description">We are dedicated to building a foundation for **lasting well-being**.</p>
+            <p class="description">We are dedicated to building a foundation for lasting well-being.</p>
         </div>
 
-        <!-- Hero image for About Us -->
-        <div class="visual-placeholder" style="max-width: 900px; margin: 20px auto; min-height: 350px;">
-            <p>TEAM/COMMUNITY IMAGE PLACEHOLDER</p>
-        </div>
+       <div class="visual-placeholder" style="max-width: 900px; margin: 20px auto; min-height: 350px; display: flex; align-items: center; justify-content: space-around; padding: 30px;">
+    
+    <div style="flex: 1; height: 100%; min-height: 300px; background-color: #F7F7F7; border-radius: 8px; border: 3px dashed #A88EAE; display: flex; align-items: center; justify-content: center;">
+       <img src="team.jpg" style="max-width: 80%; height: auto; display: block; margin: 0 auto; border-radius: 8px;">
+    </div>
+
+    <div style="flex: 1; text-align: left; padding-left: 30px; font-family: 'Open Sans', sans-serif;">
+        <p style="font-family: 'Raleway', sans-serif; font-size: 2.8rem; font-weight: 900; color: #343D54; margin: 0 0 25px 0; border-bottom: 3px solid #A88EAE; padding-bottom: 5px; letter-spacing: 1px;">
+            OUR TEAM
+        </p>
+        <p style="font-size: 1.25rem; line-height: 1.8; color: #444444; margin: 0;">
+            <span style="display: block; font-weight: 600; color: #343D54; margin-bottom: 8px;">Anvi Sarabhai</span>
+            <span style="display: block; font-weight: 600; color: #343D54; margin-bottom: 8px;">Sharanya Ghosh</span>
+            <span style="display: block; font-weight: 600; color: #343D54; margin-bottom: 8px;">Saanvi Dighe</span>
+            <span style="display: block; font-weight: 600; color: #343D54; margin-bottom: 8px;">Krisha Pandey</span>
+            <span style="display: block; font-weight: 600; color: #343D54;">Dhruv Tandon</span>
+        </p>
+    </div>
+    
+</div>
 
         <div class="content-section" style="max-width: 900px; width: 90%;">
-            <!-- Structure Mission/Vision into cards for better visual flow -->
             <div class="mission-vision">
                 <div class="mission-card">
                     <h3>Our Mission</h3>
@@ -93,32 +115,25 @@
             <h2>Mental Wellness Programs</h2>
             <p class="description" style="margin-bottom: 30px; text-align: center;">Addressing modern challenges like digital addiction and stress through preventative resources and tools.</p>
 
-            <div class="grid-container">
+            <div class="grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+                
                 <div class="idea-card">
-                    <div class="visual-placeholder card-image">
-                        <p>IMAGE PLACEHOLDER: Stress Relief Kit</p>
-                    </div>
                     <h3>Suicide & Stress Relief Kits</h3>
                     <p>Provision of physical resources (stress balls, pop-its, etc.) to help individuals actively relieve stress and manage immediate anxiety.</p>
                 </div>
 
                 <div class="idea-card">
-                    <div class="visual-placeholder card-image">
-                        <p>IMAGE PLACEHOLDER: Quiz / Assessment</p>
-                    </div>
                     <h3>Mental Health Status Quiz</h3>
                     <p>A short, multiple-choice quiz designed to provide users with an initial mental health status assessment, indicating a potential leaning toward depression or addiction.</p>
                 </div>
 
                 <div class="idea-card">
-                    <div class="visual-placeholder card-image">
-                        <p>IMAGE PLACEHOLDER: Phone / Screen Time</p>
-                    </div>
                     <h3>Digital Addiction Regulation</h3>
                     <p>Tools and features to help users implement and manage Screen Time Limit Regulation, aiding in the prevention and management of digital addiction.</p>
                 </div>
+                
             </div>
-        </div>
+            </div>
     </main>
 </body>
 </html>
