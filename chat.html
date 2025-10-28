@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Health Assistant Chatbot</title>
+    <style>
+        /* --- Internal CSS Styles --- */
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+        :root {
+            --primary-dark: #343D54;
+            --accent-color: #A88EAE;
+            --background-color: #F7F7F7;
+            --surface-color: #FFFFFF;
+            --text-color-dark: #444444;
+            --text-color-light: #FFFFFF;
+            --bot-color: #E6E6FA; /* Lavender for bot messages */
+            --user-color: #A88EAE;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color-dark);
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 70vh;
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-top: 5px solid var(--accent-color);
+        }
+
+        .chat-header {
+            background-color: var(--primary-dark);
+            color: var(--text-color-light);
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Message Display Area */
+        .chat-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Individual Messages */
+        .message {
+            display: flex;
+        }
+        .message.user {
+            justify-content: flex-end;
+        }
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 18px;
+            line-height: 1.4;
+        }
+
+        .message.user .message-bubble {
+            background-color: var(--user-color);
+            color: var(--text-color-light);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot .message-bubble {
+            background-color: var(--bot-color);
+            color: var(--text-color-dark);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-bubble p {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        /* Input Area */
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            gap: 10px;
+        }
+        .chat-input input[type="text"] {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .chat-input button {
+            background-color: var(--accent-color);
+            color: var(--text-color-light);
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .chat-input button:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+        }
+        
+        .chat-input button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Loading Indicator */
+        .loading-dots {
+            display: inline-block;
+            margin: 0 4px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-dark);
+            border-radius: 50%;
+            animation: bounce 1.2s infinite ease-in-out both;
+        }
+        .loading-dots:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dots:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">Simple Health Assistant Bot</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-bubble">
+                    <p>Hello! I'm a simple assistant. I can only offer suggestions for **minor** issues. If it's serious, please see a doctor immediately.</p>
+                </div>
+            </div>
+            </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Ask about a minor symptom..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        /* --- Internal JavaScript Logic --- */
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+        
+        // IMPORTANT: Paste your actual Gemini API key here.
+        // Get your key from Google AI Studio.
+        const apiKey = "AIzaSyAyxLeJRdOgaO78veFQnAqv7ZNXVw-kzjw"; // <-- PASTE YOUR KEY HERE (Replace the placeholder text)
+
+        // System instruction is CRITICAL for safety
+        const systemPrompt = "You are a simple, non-diagnostic Health Assistant Bot designed to offer general information and safe, basic suggestions for very minor, self-limiting health issues (like a common cold or minor cut). You MUST prioritize safety. If the user mentions anything severe, chronic, or an emergency, you MUST immediately stop advice and strongly advise them to seek professional medical attention.";
+        const modelUrlBase = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
+        const modelUrl = modelUrlBase + apiKey;
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+            // Use innerHTML only because the input is just plain text
+            messageDiv.innerHTML = '<div class="message-bubble"><p>' + text.replace(/\n/g, '<br>') + '</p></div>';
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showLoading() {
+            const loadingMessage = document.createElement('div');
+            loadingMessage.className = 'message bot';
+            loadingMessage.id = 'loadingIndicator';
+            loadingMessage.innerHTML = '<div class="message-bubble"><span class="loading-dots"></span><span class="loading-dots"></span><span class="loading-dots"></span></div>';
+            chatMessages.appendChild(loadingMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return loadingMessage;
+        }
+
+        async function sendMessage() {
+            const prompt = userInput.value.trim();
+            if (!prompt) return;
+
+            addMessage(prompt, 'user');
+            userInput.value = '';
+            
+            sendButton.disabled = true;
+            userInput.disabled = true;
+
+            const loadingIndicator = showLoading();
+
+            // --- FIX APPLIED HERE ---
+            // Now only checks for an empty string, allowing a valid key to work.
+            if (apiKey === "") {
+                chatMessages.removeChild(loadingIndicator);
+                let missingKeyMessage = "I cannot function without an API key. Please edit the code to include your key from Google AI Studio in the 'apiKey' variable.";
+                addMessage(missingKeyMessage, 'bot');
+                sendButton.disabled = false;
+                userInput.disabled = false;
+                userInput.focus();
+                return; // Stop execution if key is missing
+            }
+
+            try {
+                const responseText = await callGeminiAPI(prompt);
+                chatMessages.removeChild(loadingIndicator);
+                addMessage(responseText, 'bot');
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                chatMessages.removeChild(loadingIndicator);
+                let failureMessage = "I'm sorry, I couldn't connect to the service. This often happens if the API Key is invalid or if the browser's security settings (CORS) are blocking the request because the file is being run locally (file:// protocol). You may need to run this from a local web server.";
+                addMessage(failureMessage, 'bot');
+            } finally {
+                sendButton.disabled = false;
+                userInput.disabled = false;
+                userInput.focus();
+            }
+        }
+
+        async function callGeminiAPI(query, maxRetries = 5) {
+            const payload = {
+                // We use the 'contents' array with a single text part for the user's query
+                contents: [{ role: "user", parts: [{ text: query }] }],
+                config: {
+                    // System instruction is moved into the 'config' object
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                }
+            };
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(modelUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        // Implement exponential backoff for rate limiting (429 status)
+                        if (response.status === 429 && attempt < maxRetries - 1) {
+                            const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            continue;
+                        }
+                        // For any other non-OK status, throw an error
+                        throw new Error('API returned status ' + response.status + ' (' + response.statusText + ')');
+                    }
+
+                    const result = await response.json();
+                    
+                    // Safely extract the response text
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (text) {
+                        return text;
+                    } else if (result.promptFeedback?.blockReason) {
+                        // Handle cases where the prompt was blocked by safety settings
+                        return `Your request was blocked due to safety settings: ${result.promptFeedback.blockReason}. Please try a different query related to minor health issues.`;
+                    } else {
+                        throw new Error("API response text was empty or malformed.");
+                    }
+
+                } catch (error) {
+                    if (attempt === maxRetries - 1) {
+                        // If all retries fail, throw the error to be caught by sendMessage
+                        throw error;
+                    }
+                    // Log error but continue to next retry
+                    console.warn(`API call failed (Attempt ${attempt + 1}/${maxRetries}): ${error.message}`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

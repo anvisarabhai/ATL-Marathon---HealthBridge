@@ -14,17 +14,39 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            /* Ensures card size is determined by the grid and content */
+            width: 100%; 
+            margin: 0;
+            padding: 0;
         }
 
         .option-card .icon {
             font-size: 3rem; 
-            margin-bottom: 5px; /* Reduced space because image is added */
+            margin-bottom: 5px; 
         }
 
         .option-card .content-box {
             padding: 10px;
         }
 
+        /* Added responsive styling for the option grid */
+        .option-grid {
+            /* This setting ensures cards wrap nicely and the grid remains centered */
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 30px; 
+            width: 100%; 
+            max-width: 1200px; /* Set a reasonable max width for centering */
+            margin: 50px auto 0 auto; /* Center the grid container */
+            padding: 0 20px;
+            justify-content: center; /* Center grid items horizontally (for small number of items) */
+        }
+
+        @media (max-width: 1200px) {
+            .option-grid {
+                max-width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -42,49 +64,62 @@
             <p class="tagline">Tools for emotional support, addiction management, and crisis assistance.</p>
         </div>
 
-       <div class="option-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 30px; width: 100%; max-width: none; margin-top: 50px; padding: 0 20px;">
+        <div class="option-grid">
     
-    <a href="quiz.html" class="option-card">
-        <div class="visual-placeholder card-image" style="min-height: 180px;">
-            <img src="dimag.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
-        </div>
-        <div class="content-box">
-            <h3>Mental Status Assessment</h3>
-            <p>Take a quick, short-question quiz to gain insight into your current mental health status and potential risk factors.</p>
-        </div>
-    </a>
+            <a href="quiz.html" class="option-card">
+                <div class="visual-placeholder card-image" style="min-height: 180px;">
+                    <img src="dimag.jpg" alt="Brain illustration for quiz" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+                </div>
+                <div class="content-box">
+                    <h3>Mental Status Assessment</h3>
+                    <p>Take a quick, short-question quiz to gain insight into your current mental health status and potential risk factors.</p>
+                </div>
+            </a>
 
-    <a href="addiction.html" class="option-card">
-        <div class="visual-placeholder card-image" style="min-height: 180px;">
-            <img src="addic.webp" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
-        </div>
-        <div class="content-box">
-            <h3>Digital Wellness & Addiction Resources</h3>
-            <p>Access screen time regulation tools help manage digital addictions.</p>
-        </div>
-    </a>
+            <a href="addiction.html" class="option-card">
+                <div class="visual-placeholder card-image" style="min-height: 180px;">
+                    <img src="addic.webp" alt="Digital device addiction illustration" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+                </div>
+                <div class="content-box">
+                    <h3>Digital Wellness & Addiction Resources</h3>
+                    <p>Access screen time regulation tools help manage digital addictions.</p>
+                </div>
+            </a>
 
-    <a href="support.html" class="option-card">
-        <div class="visual-placeholder card-image" style="min-height: 180px;">
-           <img src="stress.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
-        </div>
-        <div class="content-box">
-            <h3>Support & Stress Relief Kits</h3>
-            <p>Find information addiction and our stress-relief kits for times of emotional crisis and high stress.</p>
-        </div>
-    </a>
+            <a href="autism.html" class="option-card">
+                <div class="visual-placeholder card-image" style="min-height: 180px;">
+                    <img 
+                        src="autism.jpg" 
+                        alt="Autism Spectrum Disorder illustration" 
+                        style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;"
+                    >
+                </div>
+                <div class="content-box">
+                    <h3>Autism Spectrum Disorder (ASD)</h3>
+                    <p>Find dedicated information, support strategies, and resources for children with ASD.</p>
+                </div>
+            </a>
+            <a href="support.html" class="option-card">
+                <div class="visual-placeholder card-image" style="min-height: 180px;">
+                    <img src="stress.jpg" alt="Stress relief illustration" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+                </div>
+                <div class="content-box">
+                    <h3>Support & Stress Relief Kits</h3>
+                    <p>Find information addiction and our stress-relief kits for times of emotional crisis and high stress.</p>
+                </div>
+            </a>
 
-    <a href="therapy.html" class="option-card">
-        <div class="visual-placeholder card-image" style="min-height: 180px;">
-           <img src="therapy.png" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+            <a href="therapist.html" class="option-card">
+                <div class="visual-placeholder card-image" style="min-height: 180px;">
+                    <img src="therapy.png" alt="Online therapy illustration" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px 8px 0 0;">
+                </div>
+                <div class="content-box">
+                    <h3>Connect to Care (Online Therapy)</h3>
+                    <p>A curated pathway to professional online counseling, therapy platforms, and mental health specialists.</p>
+                </div>
+            </a>
+            
         </div>
-        <div class="content-box">
-            <h3>Connect to Care (Online Therapy)</h3>
-            <p>A curated pathway to professional online counseling, therapy platforms, and mental health specialists.</p>
-        </div>
-    </a>
-    
-</div>
     </main>
 </body>
 </html>
