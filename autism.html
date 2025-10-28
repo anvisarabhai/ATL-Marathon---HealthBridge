@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Bridge - ASD</title>
+    <style>
+        /* ======================= CSS STYLING ======================= */
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&family=Open+Sans:wght@400;600&display=swap');
+
+        :root {
+            --primary-dark: #343D54;
+            --accent-color: #A88EAE;
+            --light-accent: #C7B9CC;
+            --background-color: #F7F7F7;
+            --surface-color: #FFFFFF;
+            --text-color-dark: #444444;
+            --text-color-light: #FFFFFF;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color-dark);
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px; /* Space for fixed navbar */
+            box-sizing: border-box;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            width: 100%;
+            background-color: var(--primary-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        .logo {
+            color: var(--text-color-light);
+            font-family: 'Raleway', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: var(--text-color-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- Buttons (CTA) --- */
+        .cta-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin-top: 20px;
+            background-color: var(--accent-color);
+            color: var(--text-color-light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(168, 142, 174, 0.4);
+        }
+
+        .cta-btn:hover {
+            background-color: #927D98;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(168, 142, 174, 0.6);
+        }
+
+        /* --- Banner (General Hero Section) --- */
+        .banner {
+            background-color: var(--surface-color);
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            text-align: center;
+            margin-top: 20px;
+            border-bottom: 5px solid var(--accent-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .banner h1 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+
+        .banner .tagline, .banner .description {
+            font-size: 1.5rem;
+            color: var(--text-color-dark);
+            font-weight: 300;
+        }
+
+        /* --- Visual Placeholder Styling --- */
+        .visual-placeholder {
+            width: 100%;
+            min-height: 250px;
+            background-color: var(--background-color);
+            border: 3px dashed var(--light-accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: center;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .visual-placeholder.card-image {
+            min-height: 150px;
+            margin: 0 0 15px 0;
+        }
+
+        /* --- Content Sections --- */
+        .content-section {
+            background-color: var(--surface-color);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            margin-bottom: 40px;
+            border-left: 5px solid var(--accent-color);
+            max-width: 1000px;
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 60px;
+        }
+
+        .content-section h2 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--light-accent);
+            padding-bottom: 10px;
+        }
+
+        /* --- Grid Container (ASD Detail Cards) --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .idea-card {
+            background-color: var(--background-color);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--light-accent);
+        }
+
+        .idea-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .idea-card h3 {
+            font-family: 'Raleway', sans-serif;
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .idea-card ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        /* --- Support & Kits (ASD Support Section) --- */
+        .kit-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .kit-info {
+            max-width: 500px;
+        }
+
+        .kit-info ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+
+        /* --- Modal Styling --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-top: 5px solid var(--accent-color);
+        }
+
+        .modal-content h3 {
+            font-family: 'Raleway', sans-serif;
+            color: var(--primary-dark);
+            border-bottom: 1px solid var(--light-accent);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-accent);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (min-width: 768px) {
+            .banner {
+                flex-direction: row;
+                text-align: left;
+                padding: 80px 60px;
+                gap: 60px;
+            }
+
+            .banner > div {
+                flex: 1;
+            }
+
+            .banner h1 {
+                font-size: 5rem;
+            }
+
+            .kit-section {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        @media (max-width: 767px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            .nav-links {
+                gap: 15px;
+            }
+            .banner h1 {
+                font-size: 3rem;
+            }
+            .banner .tagline, .banner .description {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Health Bridge</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#" id="spreadAwarenessLink">Awareness Pledge</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <a id="home" style="display: block; position: relative; top: -80px;"></a>
+
+        <header class="banner">
+            <div>
+                <h1>Austism Spectrum Disorder</h1>
+                <p class="tagline">Fostering Understanding, Empathy, and Support</p>
+                <p class="description">Nearly 1 in 7 people worldwide live with a mental disorder. Our mission is to reduce stigma, encourage early help-seeking, and promote informed, compassionate support for all individuals affected.</p>
+                <a href="#asd-section" class="cta-btn">View ASD Details</a>
+            </div>
+            <div class="visual-placeholder">
+<img src="commsupp.jpg">
+            </div>
+        </header>
+        
+        <section class="content-section" id="asd-section">
+            <h2 id="asd-title">Autism Spectrum Disorder (ASD): A Neurodevelopmental Condition</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8;">
+                Autism Spectrum Disorder (ASD) is a condition related to brain development that profoundly impacts an individual's perception and socialization, leading to differences in social interaction and communication. The spectrum encompasses a wide range of presentation, challenges, and strengths.
+            </p>
+
+            <div class="visual-placeholder card-image">
+               <img src="AUTS.webp">
+            </div>
+
+            <div class="grid-container">
+                <div class="idea-card">
+                    <h3>Core Behavioral Characteristics</h3>
+                    <ul>
+                        <li>Impaired Theory of Mind: Significant challenges in discerning and interpreting the thoughts and feelings of others.</li>
+                        <li>Social Situational Anxiety: Experiencing severe distress or anxiety in social contexts.</li>
+                        <li>Relationship Formation: Difficulty in establishing peer relationships or a strong preference for solitary activities.</li>
+                        <li>Atypical Communication: Unintentional display of behaviors that may be interpreted as bluntness or a lack of interest in others without meaning to.</li>
+                        <li>Emotional Expression: Substantial difficulty in articulating or describing personal emotional states.</li>
+                    </ul>
+                </div>
+                <div class="idea-card">
+                    <h3>Associated Clinical Manifestations</h3>
+                    <p>Individuals with ASD may present with a variety of associated behaviors, including:</p>
+                    <ul>
+                        <li>Difficulties with social reciprocity and verbal/non-verbal communication.</li>
+                        <li>Exhibiting repetitive behaviors and adherence to fixed routines.</li>
+                        <li>Demonstrating intense, focused interests in specific subjects.</li>
+                        <li>Heightened or diminished sensory sensitivity to sights, sounds, or textures.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Strategies for Supporting Children with ASD</h2>
+            <p style="font-size: 1.1rem; line-height: 1.6;">
+                Children with autism can achieve fulfilling lives with varying degrees of independence, though their path involves unique challenges and requires specialized support. Through early diagnosis, personalized interventions, and inclusive environments, they can acquire essential skills, build confidence, and lead fulfilling lives.
+            </p>
+
+            <div class="kit-section">
+                <div class="kit-info">
+                    <h3>Effective Management and Therapeutic Approaches</h3>
+                    <p>Effective management requires a focus on creating a supportive, predictable environment and employing clear, simple communication. Key therapeutic and environmental interventions include:</p>
+                    <ul>
+                        <li>Early Diagnosis and Personalized Interventions: Crucial for building confidence and essential life skills.</li>
+                        <li>Behavioral Therapy (e.g., ABA): Utilizes consistent routines, clear communication, and positive reinforcement to promote adaptive behaviors and manage challenging ones.</li>
+                        <li>Speech and Language Therapy</li>
+                        <li>Occupational Therapy</li>
+                    </ul>
+                </div>
+                <div class="visual-placeholder card-image" style="max-width: 400px; min-height: 200px;">
+                    <img src="auris.webp" style="
+         max-width: 80%; 
+         height: auto; 
+         display: block; 
+         margin: 20px auto; 
+         border-radius: 8px; 
+         box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+         border: 1px solid var(--light-accent);
+     ">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="awarenessModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" style="float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            <h3>Take the Awareness Pledge</h3>
+            <p>Commit to reducing stigma by promoting understanding and empathy.</p>
+            <form id="pledgeForm">
+                <div class="form-group">
+                    <label for="pledgeName">Your Name (Optional)</label>
+                    <input type="text" id="pledgeName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="pledgeCommitment">Your Commitment</label>
+                    <textarea id="pledgeCommitment" rows="3" placeholder="I commit to actively listening and learning about mental health challenges." required></textarea>
+                </div>
+                <button type="submit" class="cta-btn btn-submit" style="width: 100%; margin-top: 10px;">Pledge & Share</button>
+            </form>
+            <p id="pledgeMessage" style="color: var(--primary-dark); font-weight: 600; text-align: center; margin-top: 15px; display: none;"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Modal Interactivity for Awareness Pledge ---
+            const modal = document.getElementById("awarenessModal");
+            const btn = document.getElementById("spreadAwarenessLink");
+            const span = document.querySelector(".close-btn");
+            const pledgeForm = document.getElementById('pledgeForm');
+            const pledgeMessage = document.getElementById('pledgeMessage');
+
+            // Open Modal
+            btn.onclick = function(e) {
+                e.preventDefault();
+                pledgeForm.style.display = 'block';
+                pledgeMessage.style.display = "none";
+                pledgeForm.reset();
+                modal.style.display = "block";
+            }
+
+            // Close Modal on 'x' click
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Close Modal on outside click
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // Handle Pledge Form Submission
+            pledgeForm.onsubmit = function(e) {
+                e.preventDefault();
+                const name = document.getElementById('pledgeName').value || 'A Kind Advocate';
+
+                // Simple feedback
+                pledgeForm.style.display = 'none';
+                pledgeMessage.textContent = `${name}, thank you for your commitment to understanding and empathy!`;
+                pledgeMessage.style.display = 'block';
+
+                // Set a timer to close the modal after a short display
+                setTimeout(() => {
+                    modal.style.display = "none";
+                    pledgeForm.style.display = 'block';
+                    pledgeMessage.style.display = "none";
+                    pledgeForm.reset();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
