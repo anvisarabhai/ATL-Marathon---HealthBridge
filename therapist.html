@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Therapist - Arogya Mitra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================================================= */
+        /* --- START: BASE CSS & THEME --- */
+        /* ========================================================================= */
+        :root {
+            --primary-dark: #343D54; /* Dark Blue-Gray */
+            --accent-color: #A88EAE; /* Mauve/Purple Accent */
+            --light-accent: #C7B9CC; /* Lighter Mauve */
+            --background-color: #F7F7F7;
+            --surface-color: #FFFFFF;
+            --text-color-dark: #444444;
+            --text-color-light: #FFFFFF;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color-dark);
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+            box-sizing: border-box;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: var(--primary-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        .logo {
+            color: var(--text-color-light);
+            font-family: 'Raleway', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: var(--text-color-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--accent-color);
+            color: var(--text-color-light);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-family: 'Raleway', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(168, 142, 174, 0.4);
+            border: none;
+        }
+
+        .cta-btn:hover {
+            background-color: #927D98;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(168, 142, 174, 0.6);
+        }
+        
+        /* --- Layout & Filters (Search Page) --- */
+        .search-page-layout {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .sidebar {
+            flex: 0 0 280px;
+            background-color: var(--surface-color);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            position: sticky;
+            top: 100px;
+            border-top: 5px solid var(--accent-color);
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-accent);
+        }
+
+        .filter-group h3 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-accent);
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-top: 5px;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color-dark);
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            margin-right: 10px;
+            transform: scale(1.1);
+            accent-color: var(--accent-color);
+        }
+        
+        .results-area {
+            flex-grow: 1;
+        }
+
+        .result-count {
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+        /* --- Therapist Card Styling --- */
+        .therapist-card {
+            background-color: var(--surface-color);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            border-left: 8px solid var(--accent-color);
+            transition: transform 0.2s;
+        }
+
+        .therapist-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Profile Icon Styling (NEW) --- */
+        .profile-pic-container { /* Container for the SVG icon */
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--primary-dark);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0; /* Light background for the icon */
+            overflow: hidden; /* Ensure icon stays within circle */
+        }
+        .profile-pic-container svg {
+            width: 80%; /* Adjust size of the SVG within the container */
+            height: 80%;
+            fill: var(--accent-color); /* Icon color */
+        }
+
+
+        .details {
+            flex-grow: 1;
+        }
+
+        .details h2 {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--light-accent);
+            color: var(--primary-dark);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .fee {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--accent-color);
+            font-family: 'Raleway', sans-serif;
+        }
+
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .book-button {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        /* --- Modal Styling --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.7); 
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            margin: 10% auto; 
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .close-btn {
+            color: var(--text-color-dark);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover, .close-btn:focus {
+            color: var(--accent-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h3 {
+            font-family: 'Raleway', sans-serif;
+            color: var(--primary-dark);
+            margin-top: 0;
+            border-bottom: 2px solid var(--light-accent);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .date-picker-area h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .dates-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .date-item {
+            background-color: var(--background-color);
+            padding: 10px 5px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid var(--background-color);
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .date-item:hover:not(.booked) {
+            background-color: var(--light-accent);
+            border-color: var(--light-accent);
+            color: var(--primary-dark);
+        }
+
+        .date-item.selected {
+            background-color: var(--accent-color);
+            color: var(--text-color-light);
+            border-color: var(--accent-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .date-item.booked {
+            background-color: #eee;
+            color: #aaa;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .timeslot-area {
+            border-left: 1px solid var(--light-accent);
+            padding-left: 30px;
+        }
+
+        .timeslot-area h4 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .times-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .time-item {
+            background-color: var(--background-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid var(--light-accent);
+            transition: all 0.2s;
+            font-weight: 400;
+        }
+
+        .time-item:hover:not(.booked) {
+            background-color: var(--light-accent);
+            color: var(--primary-dark);
+        }
+
+        .time-item.selected {
+            background-color: var(--primary-dark);
+            color: var(--text-color-light);
+            border-color: var(--primary-dark);
+        }
+        
+        #confirmBookingBtn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            font-size: 1rem;
+        }
+
+        /* Responsive Modal */
+        @media (max-width: 768px) {
+            .calendar-section {
+                grid-template-columns: 1fr;
+            }
+            .timeslot-area {
+                border-left: none;
+                padding-left: 0;
+                padding-top: 20px;
+                border-top: 1px solid var(--light-accent);
+            }
+            .dates-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 900px) {
+            .search-page-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .therapist-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .details {
+                text-align: center;
+            }
+            .action-area {
+                width: 100%;
+                align-items: center;
+                margin-top: 15px;
+            }
+            .profile-pic-container { /* Adjust for smaller screens */
+                margin-bottom: 15px;
+            }
+            .details p {
+                font-size: 0.9rem;
+            }
+        }
+        /* ========================================================================= */
+        /* --- END: BASE CSS & THEME --- */
+        /* ========================================================================= */
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">Health Bridge</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="font-family: 'Raleway', sans-serif; color: var(--primary-dark); font-size: 2.5rem; margin-bottom: 10px;">
+                Find Your Path to Wellness
+            </h1>
+            <p style="font-size: 1.1rem; color: #666;">
+                Book an online or in-person session with a licensed Indian therapist.
+            </p>
+        </div>
+
+        <div class="search-page-layout">
+            <div class="sidebar">
+                <div class="filter-group"><h3>Quick Search</h3><input type="text" id="searchName" placeholder="Name, City, or Concern" oninput="filterTherapists()"></div>
+                <div class="filter-group"><h3>Therapy Focus</h3><select id="filterSpecialty" onchange="filterTherapists()"><option value="">All Areas of Concern</option><option value="Anxiety">Anxiety & Exam Stress</option><option value="Depression">Depression & Low Mood</option><option value="Couples">Couples & Marital</option><option value="Trauma">Trauma & Abuse</option><option value="Family">Family Dynamics</option><option value="Career">Career & Burnout</option></select></div>
+                <div class="filter-group"><h3>Session Type</h3><select id="filterSession" onchange="filterTherapists()"><option value="">Any Type</option><option value="Virtual">Online/Virtual</option><option value="In-Person">In-Person Only</option></select></div>
+                <div class="filter-group"><h3>Payment/Insurance</h3><label class="checkbox-label"><input type="checkbox" name="insurance" value="Ayushman" onchange="filterTherapists()">Ayushman Bharat</label><label class="checkbox-label"><input type="checkbox" name="insurance" value="ESI" onchange="filterTherapists()">ESI/Corporate EAP</label><label class="checkbox-label"><input type="checkbox" name="insurance" value="Self-Pay" onchange="filterTherapists()">Flexible Self-Pay</label></div>
+                <button class="cta-btn book-button" style="width: 100%; margin-top: 5px;" onclick="filterTherapists()">Apply Filters</button>
+            </div>
+
+            <div class="results-area">
+                <p class="result-count" id="resultCount"></p>
+                <div id="therapistList">
+                    </div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modalTherapistName">Book Session with Therapist</h3>
+            
+            <p style="margin-bottom: 20px;">Select a suitable date and time for your appointment:</p>
+
+            <div class="calendar-section">
+                
+                <div class="date-picker-area">
+                    <h4>Next Available Dates</h4>
+                    <div id="datesGrid" class="dates-grid">
+                        </div>
+                </div>
+
+                <div class="timeslot-area">
+                    <h4 id="selectedDateHeader">Select a Date to see Times</h4>
+                    <div id="timesGrid" class="times-grid">
+                        </div>
+                </div>
+
+            </div>
+
+            <button id="confirmBookingBtn" class="cta-btn book-button" disabled>
+                Confirm Booking
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Dummy Data (Indian Context) ---
+        const allTherapists = [
+            {
+                id: 1,
+                name: "Ms. Priyanka Sharma, M.A.",
+                title: "Counselling Psychologist",
+                location: "Virtual (All India)",
+                specialties: ["Anxiety", "Career", "Mindfulness"],
+                insurance: ["Ayushman", "Self-Pay"],
+                fee: "₹1,800",
+                session: "Virtual",
+            },
+            {
+                id: 2,
+                name: "Dr. Rohan Gupta, Ph.D.",
+                title: "Clinical Psychologist (RCI Licensed)",
+                location: "In-Person (New Delhi)",
+                specialties: ["Trauma", "Depression", "CBT"],
+                insurance: ["ESI", "Self-Pay"],
+                fee: "₹2,500",
+                session: "In-Person",
+            },
+            {
+                id: 3,
+                name: "Mr. Imran Khan, LCSW",
+                title: "Social Worker & Family Therapist",
+                location: "Virtual (Weekends)",
+                specialties: ["Family", "Grief"],
+                insurance: ["Ayushman", "ESI", "Self-Pay"],
+                fee: "₹1,500",
+                session: "Virtual",
+            },
+            {
+                id: 4,
+                name: "Ms. Anjali Nair, M.Phil.",
+                title: "Child & Adolescent Counsellor",
+                location: "In-Person (Bengaluru)",
+                specialties: ["ADHD", "Exam Stress", "Parenting"],
+                insurance: ["Self-Pay"],
+                fee: "₹1,950",
+                session: "In-Person",
+            },
+        ];
+
+        // --- DUMMY BOOKING DATA for Modal ---
+        const availableDates = [
+            { date: 'Sun, Nov 10', times: ['10:00 AM', '12:00 PM', '03:00 PM'] },
+            { date: 'Mon, Nov 11', times: ['09:00 AM', '11:00 AM', '04:00 PM', '06:00 PM'] },
+            { date: 'Tue, Nov 12', times: ['10:30 AM', '01:30 PM', '05:30 PM'] },
+            { date: 'Wed, Nov 13', times: ['11:00 AM', '02:00 PM', '04:30 PM'] },
+            { date: 'Fri, Nov 15', times: ['10:00 AM', '11:00 AM', '1:00 PM', '3:00 PM'] },
+            { date: 'Sat, Nov 16', times: ['09:30 AM', '11:30 AM', '02:30 PM'] },
+        ];
+
+
+        const therapistList = document.getElementById('therapistList');
+        const resultCount = document.getElementById('resultCount');
+        
+        let selectedTherapist = null;
+        let selectedDate = null;
+        let selectedTime = null;
+
+        // =========================================================================
+        // --- BOOKING MODAL FUNCTIONS (NEW) ---
+        // =========================================================================
+
+        function showModal(therapistId) {
+            selectedTherapist = allTherapists.find(t => t.id === therapistId);
+            if (!selectedTherapist) return;
+
+            // Reset selections
+            selectedDate = null;
+            selectedTime = null;
+            document.getElementById('confirmBookingBtn').disabled = true;
+            document.getElementById('selectedDateHeader').textContent = 'Select a Date to see Times';
+            document.getElementById('timesGrid').innerHTML = '';
+
+            // Update modal header
+            document.getElementById('modalTherapistName').textContent = `Book Session with ${selectedTherapist.name}`;
+
+            // Populate the dates grid
+            populateDates();
+            
+            // Show the modal
+            document.getElementById('bookingModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+
+        function populateDates() {
+            const datesGrid = document.getElementById('datesGrid');
+            datesGrid.innerHTML = ''; // Clear previous dates
+            
+            availableDates.forEach(day => {
+                const dateElement = document.createElement('div');
+                dateElement.className = 'date-item';
+                dateElement.textContent = day.date;
+                dateElement.onclick = () => selectDate(day.date, day.times);
+                datesGrid.appendChild(dateElement);
+            });
+        }
+
+        function selectDate(date, times) {
+            selectedDate = date;
+            selectedTime = null; // Clear time selection when date changes
+            
+            // Highlight selected date and remove highlight from others
+            document.querySelectorAll('.date-item').forEach(el => {
+                el.classList.remove('selected');
+                if (el.textContent === date) {
+                    el.classList.add('selected');
+                }
+            });
+
+            // Update timeslot header
+            document.getElementById('selectedDateHeader').textContent = `Available Times on ${date}`;
+
+            // Populate the times grid
+            populateTimes(times);
+            
+            document.getElementById('confirmBookingBtn').disabled = true;
+        }
+
+        function populateTimes(times) {
+            const timesGrid = document.getElementById('timesGrid');
+            timesGrid.innerHTML = ''; // Clear previous times
+
+            times.forEach(time => {
+                const timeElement = document.createElement('div');
+                timeElement.className = 'time-item';
+                timeElement.textContent = time;
+                timeElement.onclick = () => selectTime(time);
+                timesGrid.appendChild(timeElement);
+            });
+        }
+
+        function selectTime(time) {
+            selectedTime = time;
+
+            // Highlight selected time and remove highlight from others
+            document.querySelectorAll('.time-item').forEach(el => {
+                el.classList.remove('selected');
+                if (el.textContent === time) {
+                    el.classList.add('selected');
+                }
+            });
+
+            // Enable the confirmation button
+            document.getElementById('confirmBookingBtn').disabled = false;
+        }
+        
+        document.getElementById('confirmBookingBtn').onclick = () => {
+            if (selectedTherapist && selectedDate && selectedTime) {
+                alert(`Successfully booked ${selectedTherapist.name} on ${selectedDate} at ${selectedTime}. 
+                \n(In a real application, this would send data to the server and process payment.)`);
+                closeModal();
+            } else {
+                alert('Please select both a date and a time.');
+            }
+        };
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        // =========================================================================
+        // --- EXISTING FILTER/RENDER FUNCTIONS (MODIFIED BOOKING CALL) ---
+        // =========================================================================
+        
+        function generateCard(therapist) {
+            const tags = therapist.specialties.map(s => `<span class="tag">${s}</span>`).join('');
+            
+            // Replaced img tag with a div containing an SVG for a generic icon
+            const profilePictureHtml = `
+                <div class="profile-pic-container">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                    </svg>
+                </div>
+            `;
+
+            return `
+                <div class="therapist-card" data-id="${therapist.id}" data-specialties="${therapist.specialties.join(',')}" data-session="${therapist.session}">
+                    ${profilePictureHtml}
+                    <div class="details">
+                        <h2>${therapist.name}</h2>
+                        <p><strong>${therapist.title}</strong></p>
+                        <p>${therapist.location} | Insurance: ${therapist.insurance.length > 0 ? therapist.insurance.join(', ') : 'Self-Pay Only'}</p>
+                        <div class="specialties">${tags}</div>
+                    </div>
+                    <div class="action-area">
+                        <span class="fee">${therapist.fee}/session</span>
+                        <button class="cta-btn book-button" onclick="showModal(${therapist.id})">Book Session</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTherapists(therapists) {
+            therapistList.innerHTML = '';
+            
+            if (therapists.length === 0) {
+                therapistList.innerHTML = '<div class="no-results">క్షమించండి (Kshama Chahate Hain/Sorry)! No therapists matched your filters. Please adjust your criteria.</div>';
+                resultCount.textContent = 'Showing 0 results';
+                return;
+            }
+
+            therapists.forEach(therapist => {
+                therapistList.innerHTML += generateCard(therapist);
+            });
+            resultCount.textContent = `Showing ${therapists.length} results of ${allTherapists.length} available professionals`;
+        }
+
+        function filterTherapists() {
+            const searchTerm = document.getElementById('searchName').value.toLowerCase();
+            const selectedSpecialty = document.getElementById('filterSpecialty').value;
+            const selectedSession = document.getElementById('filterSession').value;
+            
+            const selectedInsurances = Array.from(document.querySelectorAll('input[name="insurance"]:checked'))
+                                            .map(cb => cb.value);
+
+            const filtered = allTherapists.filter(therapist => {
+                const therapistDetails = `${therapist.name} ${therapist.title} ${therapist.location} ${therapist.specialties.join(' ')}`.toLowerCase();
+                const matchesSearch = therapistDetails.includes(searchTerm);
+                const matchesSpecialty = selectedSpecialty === "" || therapist.specialties.includes(selectedSpecialty);
+                const matchesSession = selectedSession === "" || therapist.session === selectedSession;
+                const matchesInsurance = selectedInsurances.length === 0 || selectedInsurances.every(ins => therapist.insurance.includes(ins));
+
+                return matchesSearch && matchesSpecialty && matchesSession && matchesInsurance;
+            });
+
+            renderTherapists(filtered);
+        }
+
+        // Initialize the page on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTherapists(allTherapists);
+        });
+
+    </script>
+</body>
+</html>
